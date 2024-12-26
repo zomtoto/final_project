@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body th:fragment="content">
+<header class="top-banner">
+    <div class="login-bar"><a href="/templates/template/login.html">Login</a></div>
+    <nav class="navbar">
+        <ul class="nav-list">
+            <li><a href="">Category 1</a></li>
+            <li><a href="">Category 2</a></li>
+            <li><a href="">Category 3</a></li>
+            <li><a href="">Category 4</a></li>
+            <li><a href="">Category 5</a></li>
+        </ul>
+    </nav>
+
+    <div style="text-align:center;">
+        <img src="logo.png" alt="3조 문구류 온라인 쇼핑몰 로고" width="150" height="150">
+    </div>
+    <div style="text-align:center;">
+        <form action="/search" method="get">
+            <div>
+                <input type="text" name="q" placeholder="검색창">
+                <button type="submit">검색하기</button>
+            </div>
+        </form>
+    </div>
+</header>
+</body>
+
+</html>

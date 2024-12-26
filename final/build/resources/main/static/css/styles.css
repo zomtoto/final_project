@@ -1,0 +1,83 @@
+.top-banner {
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.top-banner header {
+    position: relative;
+}
+
+.top-banner .login-bar {
+    position: absolute; /* Take the login out of the normal flow */
+    top: 10px;
+    right: 20px; /* Place it at the top-right corner */
+    text-align: right;
+    z-index: 10; /* Ensure it appears above other elements */
+}
+
+.top-banner .navbar {
+    display: flex;
+    flex-direction: column; /* Stack nav items vertically if needed */
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically within the remaining space */
+    color: black !important;
+    padding: 10px 20px;
+    background-color: aqua;
+    box-shadow: none;
+    position: relative; /* Allow the navbar to align properly */
+}
+
+.top-banner .nav-list {
+    display: flex; /* Keep categories horizontal */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 20px; /* Add space between categories */
+}
+
+.top-banner .nav-list li a {
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s ease-in-out;
+    font-size: 1.5rem; /* Make links more visible */
+}
+
+.top-banner .nav-list li a:hover {
+    color: #ffd700;
+}
+
+@media (max-width: 600px) {
+    .top-banner .navbar {
+        height: auto; /* Adjust height for smaller screens */
+        padding: 20px;
+    }
+
+    .top-banner .nav-list {
+        flex-direction: column; /* Stack categories vertically */
+        gap: 10px; /* Reduce space between categories */
+    }
+
+    .top-banner .login-bar {
+        position: static; /* Allow natural flow on smaller screens */
+        text-align: center; /* Center login section */
+        margin-bottom: 10px;
+    }
+}
+
+.top-banner form {
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* footer section*/
+
+
+/* login section*/
+.loginpage .login-box {
+    background-color: lightgrey;
+    width: 300px;
+    border : 15px solid darkgrey;
+    padding : 50px;
+    margin: 20px;
+}

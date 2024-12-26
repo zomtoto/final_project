@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<h1>부분 포함</h1>
+<h2>부분포함 insert</h2>
+<div th:insert="~{template/fragment/footer :: copy}"></div>
+
+<h2>부분포함 replace</h2>
+<div th:replace="~{template/fragment/footer :: copy}"></div>
+
+<h2>부분포함 단푼 표현식</h2>
+<div th:replace="~{template/fragment/footer :: copy}"></div>
+
+<h2>파라미터 사용</h2>
+<div th:replace="~{template/fragment/footer :: copyParam (param1, param2)}"></div>
+
+
+</body>
+</html>

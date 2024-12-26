@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>3조 파이널 프로젝트</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<!-- Include top_banner -->
+<div th:replace ="~{top :: content}"></div>
+<!-- Include main content -->
+<div th:replace ="~{main :: content}"></div>
+<!-- Include bottom_banner -->
+<div th:replace ="~{footer :: content}"></div>
+
+</body>
+</html>
