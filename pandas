@@ -1,0 +1,581 @@
+3. 시각화 추가 예정
+5. 시각화 수정 필요
+# ====================================================================================================
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly.offline as pyo
+from datetime import datetime
+pyo.init_notebook_mode()
+
+#지도 시각화
+import folium
+from folium.plugins import MarkerCluster
+from IPython.display import display, HTML
+from geopy.geocoders import Nominatim
+
+PATH = "CSV/"
+# 상품목록
+Product_doc  = pd.read_csv(PATH + "상품목록.csv", encoding = "utf-8-sig")
+# 회원목록
+UserData_2023_doc = pd.read_csv(PATH + "회원목록_2023년.csv", encoding = "utf-8-sig")
+UserData_2022_doc = pd.read_csv(PATH + "회원목록_2022년.csv", encoding = "utf-8-sig")
+UserData_2021_doc = pd.read_csv(PATH + "회원목록_2021년.csv", encoding = "utf-8-sig")
+UserData_2020_doc = pd.read_csv(PATH + "회원목록_2020년.csv", encoding = "utf-8-sig")
+UserData_2019_doc = pd.read_csv(PATH + "회원목록_2019년.csv", encoding = "utf-8-sig")
+# 구매이력
+PurchaseHistory_2023_doc = pd.read_csv(PATH + "구매이력_2023년.csv", encoding = "utf-8-sig")
+PurchaseHistory_2022_doc = pd.read_csv(PATH + "구매이력_2022년.csv", encoding = "utf-8-sig")
+PurchaseHistory_2021_doc = pd.read_csv(PATH + "구매이력_2021년.csv", encoding = "utf-8-sig")
+PurchaseHistory_2020_doc = pd.read_csv(PATH + "구매이력_2020년.csv", encoding = "utf-8-sig")
+PurchaseHistory_2019_doc = pd.read_csv(PATH + "구매이력_2019년.csv", encoding = "utf-8-sig")
+
+# 1. ====================================================================================================
+# 전체 이용자별 회원가입 년도
+
+# 회원가입일컬럼 데이터프레임 만들기
+UserSignUp_df = pd.DataFrame({ "User_SignUp" : UserData_2023_doc["회원가입일"]})
+
+# 비어있는 칸(null) 확인하기
+print(f"비어있는칸 [회원가입일] : {UserSignUp_df["User_SignUp"].isnull().sum()} 개")
+
+# 비어있는 칸이 존재한다면 비어있는 칸 삭제하기
+if(UserSignUp_df["User_SignUp"].isnull().sum() != 0 ):
+    UserSignUp_df = UserSignUp_df.dropna(axis=0)
+
+# 구매일자 (년/월/일)별로 추출하기
+UserSignUp_df["User_SignUp"] = pd.to_datetime(UserSignUp_df["User_SignUp"],format='%Y-%m-%d')
+
+# 데이터프레임 만들기
+UserSignUp_Year_Month_df = pd.DataFrame({"Year":UserSignUp_df["User_SignUp"].dt.year,
+                                        "Month": UserSignUp_df["User_SignUp"].dt.month,
+                                        "Count" : 1})
+
+# 년도와 월 중복값 확인하기  
+print(f"중복값 확인 [년도] : {UserSignUp_Year_Month_df.duplicated(subset=["Year"]).sum()}개")
+print(f"중복값 확인 [월] : {UserSignUp_Year_Month_df.duplicated(subset=["Month"]).sum()}개")
+
+# 년도와 월 기준으로 중복된 데이터를 합치기.
+UserSignUp_Year_Month_df = UserSignUp_Year_Month_df.groupby(["Year","Month"],as_index=False).sum()
+
+num = int(input("2019~2023년 중 입력해주세요 : "))
+
+# 데이터 필터링
+filtered_df = UserSignUp_Year_Month_df.loc[UserSignUp_Year_Month_df['Year'] == num]
+x_values = filtered_df["Month"]
+y_values = filtered_df["Count"]
+
+# 가장 높은 값 찾기
+max_value = y_values.max()
+text_values = [f"{Count}" if Count == max_value else "" for Count in y_values]  # 최고값에만 텍스트 표시
+
+# ====================================================================================================
+# 년 전체 월별 이용자별 회원가입 수 년도 비교 [시각화] 꺾은선 그래프
+
+# 그래프 생성
+fig = go.Figure()
+fig.add_trace(
+    go.Scatter(
+        x=x_values,
+        y=y_values,
+        mode='lines+markers+text',  # 텍스트와 선/마커 표시
+        text=text_values,  # 텍스트 설정 (최고값만 표시)
+        textposition="top center",  # 텍스트 위치
+    )
+)
+fig.update_layout(
+    {
+        "title": {
+            "text": f"{num}월 전체 이용자별 회원가입 수 년도 비교",
+            "font": {"size": 20}
+        },
+        "xaxis": { 
+            "title": "가입 년도",
+            "showticklabels": True,
+            "dtick": 1
+        },
+        "yaxis": {
+            "title": "회원가입 수"
+        },
+        "width": 1000,
+        "height": 600,
+    }
+)
+# ====================================================================================================
+# 월 전체 년별 이용자별 회원가입 수 년도 비교 [시각화] 막대그래프
+num = int(input("1~12월 중 입력해주세요 : "))
+
+# 데이터 필터링
+filtered_df = UserSignUp_Year_Month_df.loc[UserSignUp_Year_Month_df['Month'] == num]
+x_values = filtered_df["Year"]
+y_values = filtered_df["Count"]
+
+# 가장 높은 값 찾기
+max_value = y_values.max()
+text_values = [f"{Count}" if Count == max_value else "" for Count in y_values]  # 최고값에만 텍스트 표시
+
+# 그래프 생성
+fig = go.Figure()
+fig.add_trace(
+    go.Bar(
+        x=x_values,
+        y=y_values,
+        text=text_values,  # 텍스트 설정 (최고값만 표시)
+        textposition="auto",  # 텍스트 위치
+    )
+)
+fig.update_layout(
+    {
+        "title": {
+            "text": f"{num}월 전체 이용자별 회원가입 수 년도 비교",
+            "font": {"size": 20}
+        },
+        "xaxis": { 
+            "title": "가입 년도",
+            "showticklabels": True,
+            "dtick": 1
+        },
+        "yaxis": {
+            "title": "회원가입 수"
+        },
+        "width": 1000,
+        "height": 600,
+    }
+)
+
+# 2. ====================================================================================================
+#전체 이용자별 성별
+
+# 주민등록번호 8번째 자리를 성별(gender)로 분리 및 count 데이터 추가하기.
+User_Jumin_Back_Seat_df = pd.DataFrame({
+    "gender" : UserData_2023_doc["주민번호"].str[7],"count" : 1})
+
+# gender컬럼 데이터 타입을 int타입으로 변경하기.
+User_Jumin_Back_Seat_df["gender"] = User_Jumin_Back_Seat_df["gender"].astype(int)
+
+# 성별 값의 범위(1~8) 확인 및 오류 처리
+if not User_Jumin_Back_Seat_df["gender"].between(1,8).all():
+    raise ValueError("잘못된 주민번호입니다. 다시 확인해주세요.(1~8범위를 벗어나는 값이 존재합니다.)")
+
+# gender 값을 홀수/짝수 기준 으로 남자/여자 구분하기
+User_Jumin_Back_Seat_df["gender"] = User_Jumin_Back_Seat_df["gender"].apply(lambda x: "남자" if x % 2 == 1 else "여자") 
+
+# 데이터가 비어있는 칸(null) 확인하기
+print(f"비어있는 칸 수 [gender] : {User_Jumin_Back_Seat_df["gender"].isnull().sum()}개")
+
+# 만약 데이터가 비어있다면 비어있는 칸 삭제하기
+if (User_Jumin_Back_Seat_df["gender"].isnull().sum() != 0):
+     User_Jumin_Back_Seat_df = User_Jumin_Back_Seat_df.dropna(axis=0)
+
+# 주소 중복값 확인하기
+print(f"주소 중복 데이터 확인 : {User_Jumin_Back_Seat_df.duplicated(subset=["gender"]).sum()}개")
+
+# 중복된 데이터 합치기
+User_Jumin_Count_df = User_Jumin_Back_Seat_df.groupby("gender").sum()
+
+
+# ====================================================================================================
+# 성별의 따른 이용자 수 [시각화] 원형그래프
+
+
+fig = go.Figure()
+fig.add_trace(
+    go.Pie(
+        labels = User_Jumin_Count_df.index, values = User_Jumin_Count_df["count"],text = User_Jumin_Count_df.index
+    )
+)
+fig.update_layout(
+    {
+      "title":{
+            "text":" 성별에 따른 이용자 수 "
+      }
+    })
+
+# ====================================================================================================
+# 성별에 따른 이용자 수 [시각화] 원형그래프
+
+fig = go.Figure()
+fig.add_trace(
+    go.Bar(
+       x = User_Jumin_Count_df.index, y = User_Jumin_Count_df["count"],text = User_Jumin_Count_df["count"],textposition='auto'
+    )
+)
+fig.update_layout(
+    {
+      "title":{
+            "text":" 성별에 따른 이용자 수 "
+        },
+        "xaxis":{
+            "title":"성별"
+        },
+        "yaxis":{
+            "title":"이용자 수"
+        },
+        "width": 1000,
+        "height": 600,
+    })
+    
+# 3.  ====================================================================================================
+# 이용자들이 선호하는 구매 방식(카드/현금)
+
+select_year = int(input("2023~2019년도 중 입력해주세요"))
+year = datetime.now().year
+# 작년 년도로 가져오기
+doc_name = f"UserData_{select_year}_doc"
+
+# 동적으로 데이터프레임 불러오기
+if doc_name in globals():
+    selected_doc = globals()[doc_name]
+else:
+    print(f"{doc_name} 데이터프레임이 존재하지 않습니다.")
+
+if((year-1) == select_year):
+    select_year = "작년도(2023년)"
+else: 
+    select_year = str(select_year)+"년"
+    
+Pay_Method_df = pd.DataFrame({"Pay_Method" : selected_doc["결제 선호방식"],
+             "Division" : selected_doc["구분"],
+             "Count" : 1})
+
+print(f"비어있는 칸 \n{Pay_Method_df.isnull().sum()}")
+
+# 만약 결제 선호방식 또는 구분이 비어있다면 비어있는 행을 삭제하기.
+if(Pay_Method_df["Pay_Method"].isnull().sum() != 0 or Pay_Method_df["Division"].isnull().sum() != 0):
+   Pay_Method_df =  Pay_Method_df.dropna(axis = 0)
+
+# 중복된 데이터 확인하기
+print(f"중복값 확인 [Pay_Method] : {Pay_Method_df.duplicated(subset = "Pay_Method").sum()} 개")
+# 중복된 데이터 확인하기
+print(f"중복값 확인 [구분] : {Pay_Method_df.duplicated(subset = "Division").sum()} 개")
+
+#데이터 합치기 (구분 / 구분x)
+Pay_Method_Division_df = Pay_Method_df.groupby(["Pay_Method","Division"],as_index = False).sum()
+Pay_Method_Count_df = Pay_Method_df.groupby("Pay_Method",as_index = False).sum().drop(columns="Division", axis=1)
+
+# 특정 조건의 열 분리하기
+Pay_Method_Division_new_df = Pay_Method_Division_df[Pay_Method_Division_df["Division"].str.contains("신규")]
+Pay_Method_Division_existing_df = Pay_Method_Division_df[Pay_Method_Division_df["Division"].str.contains("기존")]
+
+ ====================================================================================================
+ # 년도 신규/기존 별 선호하는 구매 방식(카드/현금)
+
+fig = go.Figure()
+fig.add_trace(
+    go.Bar(
+        x= Pay_Method_Division_new_df["Pay_Method"], y= Pay_Method_Division_new_df['Count'] ,name = "신규"
+    )
+)
+fig.add_trace(
+    go.Bar(
+        x= Pay_Method_Division_existing_df["Pay_Method"], y=Pay_Method_Division_existing_df['Count'], textposition='auto', name="기존"
+    )
+)
+fig.update_layout(
+    {
+        "title":{
+            "text":f"{select_year} 신규/기존 별 선호하는 구매 방식(카드/현금)  "},
+        "xaxis":{
+           "title":"선호 결제 방식"},
+        "yaxis":{"title" :"회원 수"}
+    })
+
+# 4.  ====================================================================================================
+# 년도 별 마일리지가 제일 높은/적은 이용자
+
+User_Mileage_2023_df = pd.DataFrame({"User_Id":UserData_2023_doc["아이디"],
+                                     "Mileage":UserData_2023_doc["마일리지(포인트)"]})
+
+User_Mileage_2022_df = pd.DataFrame({"User_Id":UserData_2022_doc["아이디"],
+                                     "Mileage":UserData_2022_doc["마일리지(포인트)"]})
+
+User_Mileage_2021_df = pd.DataFrame({"User_Id":UserData_2021_doc["아이디"],
+                                     "Mileage":UserData_2021_doc["마일리지(포인트)"]})
+
+User_Mileage_2020_df = pd.DataFrame({"User_Id":UserData_2020_doc["아이디"],
+                                     "Mileage":UserData_2020_doc["마일리지(포인트)"]})
+
+User_Mileage_2019_df = pd.DataFrame({"User_Id":UserData_2019_doc["아이디"],
+                                     "Mileage":UserData_2019_doc["마일리지(포인트)"]})
+
+# 만약 값이 비어있다면 비어있는 값들을 0으로 대체 [Milleage]
+if(User_Mileage_2023_df["Mileage"].isnull().sum() != 0):
+    User_Mileage_2023_df["Mileage"] = User_Mileage_2023_df["Mileage"].fillna(0)
+
+if(User_Mileage_2022_df["Mileage"].isnull().sum() != 0):
+    User_Mileage_2022_df["Mileage"] = User_Mileage_2022_df["Mileage"].fillna(0)
+
+if(User_Mileage_2021_df["Mileage"].isnull().sum() != 0):
+    User_Mileage_2021_df["Mileage"] = User_Mileage_2021_df["Mileage"].fillna(0)
+
+if(User_Mileage_2020_df["Mileage"].isnull().sum() != 0):
+    User_Mileage_2020_df["Mileage"] = User_Mileage_2020_df["Mileage"].fillna(0)
+    
+if(User_Mileage_2019_df["Mileage"].isnull().sum() != 0):
+    User_Mileage_2019_df["Mileage"] = User_Mileage_2019_df["Mileage"].fillna(0)
+
+
+# 만약 값이 비어있다면 비어있는 값들을 삭제 [User_Id]
+if(User_Mileage_2023_df["Mileage"].isnull().sum() != 0):
+    User_Mileage_2023_df = User_Mileage_2023_df.dropna(axis=0)
+
+if(User_Mileage_2022_df["Mileage"].isnull().sum() != 0):
+    User_Mileage_2022_df = User_Mileage_2022_df.dropna(axis=0)
+
+if(User_Mileage_2021_df["Mileage"].isnull().sum() != 0):
+    User_Mileage_2021_df = User_Mileage_2021_df.dropna(axis=0)
+
+if(User_Mileage_2020_df["Mileage"].isnull().sum() != 0):
+    User_Mileage_2020_df = User_Mileage_2020_df.dropna(axis=0)
+
+if(User_Mileage_2019_df["Mileage"].isnull().sum() != 0):
+    User_Mileage_2019_df = User_Mileage_2019_df.dropna(axis=0)
+
+print(f"{User_Mileage_2023_df[User_Mileage_2023_df["Mileage"] == User_Mileage_2023_df["Mileage"].max()]}")
+print(f"{User_Mileage_2022_df[User_Mileage_2022_df["Mileage"] == User_Mileage_2022_df["Mileage"].max()]}")
+print(f"{User_Mileage_2021_df[User_Mileage_2021_df["Mileage"] == User_Mileage_2021_df["Mileage"].max()]}")
+print(f"{User_Mileage_2020_df[User_Mileage_2020_df["Mileage"] == User_Mileage_2020_df["Mileage"].max()]}")
+print(f"{User_Mileage_2019_df[User_Mileage_2019_df["Mileage"] == User_Mileage_2019_df["Mileage"].max()]}")
+
+User_Mileage_2019_df["Mileage"] = User_Mileage_2019_df["Mileage"].astype('int64')
+
+User_Mileage_2019_max_df = User_Mileage_2019_df.sort_values("Mileage", ascending=False).head(10)
+User_Mileage_2020_max_df = User_Mileage_2020_df.sort_values("Mileage", ascending=False).head(10)
+User_Mileage_2021_max_df = User_Mileage_2021_df.sort_values("Mileage", ascending=False).head(10)
+User_Mileage_2022_max_df = User_Mileage_2022_df.sort_values("Mileage", ascending=False).head(10)
+User_Mileage_2023_max_df = User_Mileage_2023_df.sort_values("Mileage", ascending=False).head(10)
+
+User_Mileage_2019_min_df = User_Mileage_2019_df.sort_values("Mileage", ascending=True).head(10)
+User_Mileage_2020_min_df = User_Mileage_2020_df.sort_values("Mileage", ascending=True).head(10)
+User_Mileage_2021_min_df = User_Mileage_2021_df.sort_values("Mileage", ascending=True).head(10)
+User_Mileage_2022_min_df = User_Mileage_2022_df.sort_values("Mileage", ascending=True).head(10)
+User_Mileage_2023_min_df = User_Mileage_2023_df.sort_values("Mileage", ascending=True).head(10)
+
+## 사용자 입력
+num = int(input("연도를 입력하세요: "))
+df_name = f"User_Mileage_{num}_max_df"
+
+# 동적으로 데이터프레임 불러오기
+if df_name in globals():
+    selected_df = globals()[df_name]
+    print(f"선택된 데이터프레임:\n{selected_df}")
+else:
+    print(f"{df_name} 데이터프레임이 존재하지 않습니다.")
+
+# ====================================================================================================
+# 년도 마일리지가 가장 높은 이용자 아이디 TOP 10 [막대그래프]
+
+selected_df = selected_df.sort_values("Mileage", ascending=True)
+y_values = selected_df["Mileage"]
+max_value = selected_df["Mileage"].max()
+text_values = [f"{Mileage}" if Mileage == max_value else "" for Mileage in y_values]  # 최고값에만 텍스트 표시
+
+fig = go.Figure()
+fig.add_trace(
+    go.Bar(
+        x = selected_df["Mileage"], 
+        y = selected_df["User_Id"],        
+        text = text_values,
+        textposition='auto',
+        orientation='h'
+    )
+)
+fig.update_layout(
+    {
+        "title":{
+            "text":f" {num}년 마일리지가 가장 높은 이용자 아이디 TOP 10 "
+        },
+        "xaxis":{
+            "title":"마일리지"
+        },
+        "yaxis":{
+            "title":"이용자 아이디"
+        },
+        "width": 1000,  # 그래프 너비 조정
+        "height": 600,  # 그래프 높이 조정
+    }
+)
+
+# ====================================================================================================
+# 년도 마일리지가 가장 적은 이용자 아이디 TOP 10 [막대그래프]
+
+selected_df = selected_df.sort_values("Mileage", ascending=False)
+y_values = selected_df["Mileage"]
+min_value = selected_df["Mileage"].min()
+text_values = [f"{Mileage}" if Mileage == min_value else "" for Mileage in y_values]  # 최고값에만 텍스트 표시
+
+fig = go.Figure()
+fig.add_trace(
+    go.Bar(
+        x = selected_df["Mileage"], 
+        y = selected_df["User_Id"],        
+        text = text_values,
+        textposition='auto',
+        orientation='h'
+    )
+)
+fig.update_layout(
+    {
+        "title":{
+            "text":f" {num}년 마일리지가 가장 적은 이용자 아이디 TOP 10 "
+        },
+        "xaxis":{
+            "title":"마일리지"
+        },
+        "yaxis":{
+            "title":"이용자 아이디"
+        },
+        "width": 1000,  # 그래프 너비 조정
+        "height": 600,  # 그래프 높이 조정
+    }
+)
+
+# 5.  ====================================================================================================
+# 지역별 이용자 분포
+
+# address컬럼 데이터프레임 만들기.
+User_Address_df = pd.DataFrame({"address": UserData_2023_doc["주소"]})
+
+# 데이터가 비어있는 칸(null) 확인하기
+print(f"데이터가 비어있는 칸 수 : {User_Address_df["address"].isnull().sum()}개")
+# 만약 데이터가 비어있다면 비어있는 칸 삭제하기
+if(User_Address_df["address"].isnull().sum() != 0):
+    User_Address_df = User_Address_df.dropna(axis=0)
+
+# User_Address_df의 "address" 컬럼 데이터를 분리해 새로운 데이터프레임에 저장
+# ""City/Province":User_Address_df["address"].str.split(" ",expand=True)[0]" City/Province라는 컬럼을 추가하고 User_Address_df["address"].str.split(" ",expand=True)[0]을 값으로 한다. 
+# "User_Address_df["address"]" User_Address_df의 데이터프레임 "address"컬럼데이터를 가져온다.
+# ".str.split(" ",expand=True)" 가져온 데이터를 문자열 기준으로 데이터들을 " "기준으로 분리하여 컬럼으로저장
+# "[0]" 분리된 결과에서 첫 번째 컬럼을 가져옴
+# 문자열 " "기준으로 분리한 다음 배열로 저장 배열[0]에 위치한 데이터를 불러옴
+# "User_Count":1" User_Count라는 컬럼을 추가하고 모든 값에 1을 넣어준다.
+# "pd.DataFrame()" 을 사용하여 데이터프레임을 생성 User_Address_City_Province_df에 저장
+User_Address_City_Province_df = pd.DataFrame({"City/Province":User_Address_df["address"].str.split(" ",expand=True)[0],
+                                             "User_Count":1})
+# 주소 중복값 확인하기
+print(f"주소 중복 데이터 확인 : {User_Address_City_Province_df.duplicated(subset=["City/Province"]).sum()}개")
+
+# 중복된 데이터 합치기
+User_Address_Count_df = User_Address_City_Province_df.groupby("City/Province",as_index=False).sum()
+
+# 내림차순으로 정렬하기(마무리)
+User_Address_Count_desc_df = User_Address_Count_df.sort_values('User_Count', ascending=False)
+
+# 이용자 수가 제일 많은 지역 5곳 찾기
+User_Address_Count_Top5_df = User_Address_Count_desc_df.head(5)
+
+# ====================================================================================================
+# "이용자 분포: 지역별 비율 [원형그래프] 전체
+
+fig = go.Figure()
+fig.add_trace(
+    go.Pie(
+        labels = User_Address_Count_desc_df["City/Province"] , values = User_Address_Count_desc_df["User_Count"],text = User_Address_Count_desc_df["City/Province"]
+    )
+)
+fig.update_layout(
+    {
+        "title":{
+            "text":"이용자 분포: 지역별 비율"
+        }
+    }
+)
+
+# ====================================================================================================
+# "이용자 분포: 지역별 비율 [원형그래프] TOP 5
+
+fig = go.Figure()
+fig.add_trace(
+    go.Pie(
+        labels = User_Address_Count_Top5_df["City/Province"], values = User_Address_Count_Top5_df["User_Count"], text = User_Address_Count_Top5_df["City/Province"]
+    )
+)
+fig.update_layout(
+    {
+        "title":{
+            "text":"이용자 수가 많은 지역 Top 5"
+        }
+    }
+)
+
+# ====================================================================================================
+# "이용자 분포: 지역별 비율 [막대그래프] TOP 5
+
+max_value = User_Address_Count_Top5_df["User_Count"].max()
+text_values =[f"{User_Count}" if User_Count == max_value else "" for User_Count in User_Address_Count_Top5_df["User_Count"]]
+
+fig = go.Figure()
+fig.add_trace(
+    go.Bar(
+        x = User_Address_Count_Top5_df["City/Province"],
+        y = User_Address_Count_Top5_df["User_Count"],
+        text = text_values,
+        textposition='auto'
+    )
+)
+fig.update_layout(
+    {
+        "title":{
+            "text":" 이용자 수가 많은 지역 Top 5 "
+        },
+        "xaxis":{
+            "title":"지역(시/도)"
+        },
+        "yaxis":{
+            "title":"이용자 수"
+        },
+        "width": 1000,  # 그래프 너비 조정
+        "height": 600,  # 그래프 높이 조정
+    }
+)
+
+# [수정필요]====================================================================================================
+# 사는 지역을 지도 위에 표시 [수정예정]
+# Geopy를 사용하여 City/Province 데이터를 위도와 경도로 변환
+geolocator = Nominatim(user_agent="city_locator")
+city_locations = {
+    city: geolocator.geocode(city + ", South Korea")
+    for city in User_Address_Count_desc_df["City/Province"]
+}
+
+# 도시의 위도, 경도 데이터를 추가
+city_lat_lng = {
+    city: (location.latitude, location.longitude) if location else (None, None)
+    for city, location in city_locations.items()
+}
+
+# 지도 설정
+korea_center = [35.8, 127.5]  # 대한민국 중심 좌표
+mymap = folium.Map(location=korea_center, zoom_start=6.5, control_scale=True)
+
+# 마커 클러스터 추가
+marker_cluster = MarkerCluster().add_to(mymap)
+
+# 사용자 수에 따라 마커 색상을 결정하는 함수
+def get_color(user_count):
+    if user_count > 20:
+        return "darkblue"
+    elif user_count > 10:
+        return "blue"
+    else:
+        return "lightblue"
+
+# 각 도시별로 지도에 마커 추가
+for _, row in User_Address_Count_desc_df.iterrows():
+    city = row["City/Province"]
+    user_count = row["User_Count"]
+    lat, lng = city_lat_lng[city]
+
+    if lat and lng:  # 유효한 좌표인 경우에만 추가
+        folium.CircleMarker(
+            location=[lat, lng],
+            radius=user_count / 2,  # 사용자 수에 따라 마커 크기 설정
+            color=get_color(user_count),
+            fill=True,
+            fill_opacity=0.6,
+            popup=f"{city}: {user_count}명"
+        ).add_to(marker_cluster)
+
+# 지도 크기 조정 (세로 길이를 조정)
+map_html = mymap._repr_html_()  # HTML representation of the map
+display(HTML(map_html.replace('height: 400px', 'height: 800px')))  # 세로 길이를 800px로 변경하여 표시
