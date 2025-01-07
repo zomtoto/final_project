@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>상품 등록</title>
+    <title>카테고리 등록</title>
     <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container {
@@ -22,86 +22,33 @@
 
     <!-- Page Title -->
     <div class="py-3 text-center">
-        <h2>상품 등록</h2>
+        <h2>카테고리 등록</h2>
     </div>
 
     <!-- Form Header -->
-    <h4 class="mb-3">상품 정보 입력</h4>
+    <h4 class="mb-3">카테고리 정보 입력</h4>
 
     <!-- Form Start -->
-    <form th:action="@{/product/products/add}" th:object="${product}" method="post">
+    <form th:action="@{/category/categories/add}" th:object="${category}" method="post">
 
         <!-- Global Error -->
         <div th:if="${errors?.containsKey('globalError')}" class="mb-3">
             <p class="field-error" th:text="${errors['globalError']}">전체 오류 메시지</p>
         </div>
 
-        <!-- Product Name -->
+        <!-- Category Name -->
         <div class="mb-3">
-            <label for="productName" class="form-label">상품명</label>
-            <input type="text" id="productName" th:field="*{name}"
+            <label for="name" class="form-label">카테고리명</label>
+            <input type="text" id="name" th:field="*{name}"
                    th:classappend="${errors?.containsKey('name')} ? 'field-error' : _"
-                   class="form-control" placeholder="상품명을 입력하세요">
+                   class="form-control" placeholder="카테고리명을 입력하세요">
             <div class="field-error" th:if="${errors?.containsKey('name')}" th:text="${errors['name']}"></div>
-        </div>
-
-        <!-- Category -->
-        <div class="mb-3">
-            <label for="category_no" class="form-label">카테고리 번호</label>
-            <input type="number" id="category_no" th:field="*{category_no}"
-                   th:classappend="${errors?.containsKey('category_no')} ? 'field-error' : _"
-                   class="form-control" placeholder="카테고리 번호를 입력하세요">
-            <div class="field-error" th:if="${errors?.containsKey('category_no')}" th:text="${errors['category_no']}"></div>
-        </div>
-
-        <!-- Company -->
-        <div class="mb-3">
-            <label for="company" class="form-label">회사명</label>
-            <input type="text" id="company" th:field="*{company}"
-                   th:classappend="${errors?.containsKey('company')} ? 'field-error' : _"
-                   class="form-control" placeholder="회사명을 입력하세요">
-            <div class="field-error" th:if="${errors?.containsKey('company')}" th:text="${errors['company']}"></div>
-        </div>
-
-        <!-- In Price -->
-        <div class="mb-3">
-            <label for="in_price" class="form-label">입고가</label>
-            <input type="number" id="in_price" th:field="*{in_price}"
-                   th:classappend="${errors?.containsKey('in_price')} ? 'field-error' : _"
-                   class="form-control" placeholder="입고가를 입력하세요">
-            <div class="field-error" th:if="${errors?.containsKey('in_price')}" th:text="${errors['in_price']}"></div>
-        </div>
-
-        <!-- Out Price -->
-        <div class="mb-3">
-            <label for="out_price" class="form-label">판매가</label>
-            <input type="number" id="out_price" th:field="*{out_price}"
-                   th:classappend="${errors?.containsKey('out_price')} ? 'field-error' : _"
-                   class="form-control" placeholder="판매가를 입력하세요">
-            <div class="field-error" th:if="${errors?.containsKey('out_price')}" th:text="${errors['out_price']}"></div>
-        </div>
-
-        <!-- Quantity -->
-        <div class="mb-3">
-            <label for="quantity" class="form-label">재고</label>
-            <input type="number" id="quantity" th:field="*{quantity}"
-                   th:classappend="${errors?.containsKey('quantity')} ? 'field-error' : _"
-                   class="form-control" placeholder="재고 수량을 입력하세요">
-            <div class="field-error" th:if="${errors?.containsKey('quantity')}" th:text="${errors['quantity']}"></div>
-        </div>
-
-        <!-- Seal Service -->
-        <div class="mb-4">
-            <div class="form-check">
-                <input type="checkbox" id="seal_service" th:field="*{seal_service}" class="form-check-input">
-                <label for="seal_service" class="form-check-label">각인 가능</label>
-            </div>
         </div>
 
         <!-- Deleted -->
         <div class="mb-4">
             <div class="form-check">
-                <input type="checkbox" id="delete" th:field="*{delete}" class="form-check-input">
+                <input type="checkbox" id="delete" th:field="*{delete}" value="Y" class="form-check-input">
                 <label for="delete" class="form-check-label">삭제 여부</label>
             </div>
         </div>
@@ -109,12 +56,11 @@
         <!-- Submit and Cancel Buttons -->
         <div class="row">
             <div class="col">
-                <button class="btn btn-primary w-100" type="submit">상품 등록</button>
+                <button class="btn btn-primary w-100" type="submit">카테고리 등록</button>
             </div>
             <div class="col">
                 <button class="btn btn-secondary w-100" type="button"
-                        th:onclick="|location.href='@{/product/products}'|"
-                        onclick="location.href='products.html'">취소</button>
+                        th:onclick="|location.href='@{/category/categories}'|">취소</button>
             </div>
         </div>
 

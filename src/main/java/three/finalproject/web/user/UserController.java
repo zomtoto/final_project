@@ -20,6 +20,7 @@ public class UserController {
 
     @GetMapping("/add")
     public String addForm(@ModelAttribute("user") User user) {
+
         return "users/addUserForm";
     }
 

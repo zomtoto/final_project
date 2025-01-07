@@ -22,7 +22,12 @@ public class MemberController {
     }
 
 
-    // Display details of a single member
+    /**
+     * 회원 상세정보
+     * @param member_no 회원 PK
+     * @param model 모델
+     * @return
+     */
     @GetMapping("/{member_no}")
     public String member(@PathVariable long member_no, Model model) {
         Member member = memberRepository.findByNo(member_no);
