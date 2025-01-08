@@ -3,7 +3,7 @@ package three.finalproject.web.session;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import three.finalproject.domain.action.session.SessionManager;
+import three.finalproject.session.SessionManager;
 import three.finalproject.domain.user.User;
 
 import static org.assertj.core.api.Assertions.*;
