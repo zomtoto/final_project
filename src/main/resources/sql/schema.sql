@@ -49,11 +49,21 @@ CREATE TABLE buy_table (
 
 CREATE TABLE image_table (
                              image_no INTEGER PRIMARY KEY AUTO_INCREMENT,   -- 이미지번호
-                             product_no INTEGER,                            -- 상품번호 (FK)
+                             product_no INTEGER NULL,                       -- 상품번호 (FK, nullable)
                              origin_path VARCHAR(255),                      -- 원본이미지 경로
                              save_path VARCHAR(255),                        -- 저장 이미지 경로
                              save_date VARCHAR(10),                         -- 저장날짜 (stored as string in YYYY-MM-DD format)
                              update_date VARCHAR(10),                       -- 수정날짜 (stored as string in YYYY-MM-DD format)
                              delete VARCHAR(10) CHECK (delete IN ('True', 'False')), -- 삭제 여부
                              FOREIGN KEY (product_no) REFERENCES product_table(product_no)
+);
+
+CREATE TABLE analyze_table (
+                               analyze_no INTEGER PRIMARY KEY AUTO_INCREMENT,       -- 분석번호
+                               image_no INTEGER NOT NULL,                           -- 이미지번호 (FK, image_table)
+                               member_no INTEGER NOT NULL,                          -- 회원번호 (FK, member_table)
+                               image_name VARCHAR(255) NOT NULL,                    -- 이미지 이름
+                               image_description TEXT,                              -- 이미지(분석) 설명
+                               FOREIGN KEY (image_no) REFERENCES image_table(image_no), -- FK to image_table
+                               FOREIGN KEY (member_no) REFERENCES member_table(member_no) -- FK to member_table
 );

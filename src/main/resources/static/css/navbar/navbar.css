@@ -12,7 +12,7 @@
     padding: 0.5rem 1rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center; /* Center the entire navbar */
 }
 
 /* 네비게이션 내부 컨테이너 */
@@ -20,6 +20,8 @@
     display: flex;
     align-items: center;
     width: 100%;
+    max-width: 1200px; /* Optional: to limit the width */
+    justify-content: space-between; /* Space between main navbar and login */
 }
 
 /* 브랜드 로고 */
@@ -42,8 +44,49 @@
     margin: 0;
 }
 
-.navbar-menu li {
-    margin-left: 1rem;
+/* Dropdown Menu Styling */
+.navbar-menu .dropdown {
+    position: relative;
+}
+
+.navbar-menu .dropdown .dropdown-toggle {
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar-menu .dropdown .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #343a40;
+    list-style: none;
+    padding: 0.5rem 0;
+    margin: 0;
+    top: 100%;
+    left: 0;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.navbar-menu .dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.navbar-menu .dropdown-menu li {
+    margin: 0;
+}
+
+.navbar-menu .dropdown-menu a {
+    text-decoration: none;
+    color: white;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    display: block;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .navbar-menu a {
@@ -60,9 +103,26 @@
     color: #343a40;
 }
 
-/* 로그아웃 버튼 */
-.navbar-logout {
+.navbar-menu .dropdown-menu a:hover {
+    background-color: #ffc107;
+    color: #343a40;
+}
+
+/* Right-aligned user section */
+.navbar-user {
     margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-user span {
+    margin-right: 1rem;
+    color: white;
+    font-size: 1rem;
+}
+
+.navbar-logout {
+    margin-left: 1rem;
 }
 
 .logout-button {
@@ -80,18 +140,17 @@
     background-color: #a71d2a;
 }
 
-/* 페이지 컨텐츠 */
-.content {
-    padding: 2rem;
-    text-align: center;
+/* 로그인 링크 */
+.login-link {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    background-color: #007bff;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
 }
 
-.content h2 {
-    margin-bottom: 1rem;
-    font-size: 2rem;
-}
-
-.content p {
-    font-size: 1.2rem;
-    color: #555;
+.login-link:hover {
+    background-color: #0056b3;
 }
