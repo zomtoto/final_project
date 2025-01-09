@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import three.finalproject.member.domain.Member;
 import three.finalproject.member.domain.dto.MemberDTO;
 import three.finalproject.member.repository.MemberRepository;
 
@@ -43,7 +42,7 @@ public class MemberController {
     // Show the form to add a new member
     @GetMapping("/add")
     public String addMemberForm(Model model) {
-        model.addAttribute("member", new Member()); // Initialize empty Member object
+        model.addAttribute("member", new MemberDTO()); // Initialize empty Member object
         return "member/addMember"; // Corresponding HTML: addMember.html
     }
 

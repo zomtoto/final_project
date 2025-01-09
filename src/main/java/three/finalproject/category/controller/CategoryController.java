@@ -24,15 +24,15 @@ public class CategoryController {
 
     @GetMapping
     public String categories(Model model) {
-        List<CategoryDTO> categories = categoryRepository.findAll();
-        model.addAttribute("categories", categories);
+        List<CategoryDTO> category = categoryRepository.findAll();
+        model.addAttribute("category", category);
         return "category/categories"; // List view page (not included here)
     }
 
     @GetMapping("/add")
     public String addForm(Model model) {
         model.addAttribute("category", new Category());
-        return "category/addCategory";
+        return "category/categoryAddForm";
     }
 
     @PostMapping("/add")
@@ -46,19 +46,19 @@ public class CategoryController {
 
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
-            return "category/addCategory";
+            return "category/categoryAddForm";
         }
 
         // Save category
         CategoryDTO savedCategory = categoryRepository.save(category);
-        redirectAttributes.addAttribute("category_no", savedCategory.getCategory_no());
+        redirectAttributes.addAttribute("category", savedCategory.getCategory_no());
         redirectAttributes.addAttribute("status", true);
 
         return "redirect:/category/categories";
     }
 
     @PostMapping("/{category_no}/edit")
-    public String editCategory(@PathVariable long category_no, @ModelAttribute CategoryDTO category,
+    public String editCategory(@PathVariable long category_no, @ModelAttribute("category") CategoryDTO category,
                                BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         // Validation logic
@@ -67,14 +67,15 @@ public class CategoryController {
         }
 
         if (bindingResult.hasErrors()) {
-            return "category/editCategory";
+            return "/category/categoryEditForm";
         }
 
         // Update the category
-        categoryRepository.update(category_no, category);
+       categoryRepository.update(category_no, category);
 
-        redirectAttributes.addAttribute("category_no", category_no);
+        redirectAttributes.addAttribute("category", category);
         redirectAttributes.addAttribute("status", true);
+
 
         return "redirect:/category/categories";
     }

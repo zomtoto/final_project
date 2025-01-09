@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import three.finalproject.category.domain.dto.CategoryDTO;
-import three.finalproject.image.domain.Image;
 import three.finalproject.image.repository.ImageRepository;
 import three.finalproject.category.repository.CategoryRepository;
 import three.finalproject.image.domain.dto.ImageDTO;
@@ -20,7 +19,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -60,7 +58,7 @@ public class ProductController {
         model.addAttribute("product", new ProductDTO());
         List<CategoryDTO> categories = categoryRepository.findAll();
         model.addAttribute("categories", categories);
-        return "product/addProduct"; // View for adding a product
+        return "product/productAddForm"; // View for adding a product
     }
 
     /**
@@ -76,7 +74,7 @@ public class ProductController {
 
         // Validate product fields
         if (bindingResult.hasErrors()) {
-            return "product/addProduct";
+            return "product/productAddForm";
         }
 
         // Save product details to the database
@@ -102,7 +100,7 @@ public class ProductController {
             } catch (IOException e) {
                 e.printStackTrace();
                 bindingResult.rejectValue("imageFile", "uploadError", "이미지 업로드에 실패했습니다.");
-                return "product/addProduct";
+                return "product/productAddForm";
             }
         }
 
@@ -119,7 +117,7 @@ public class ProductController {
         model.addAttribute("product", product);
         List<CategoryDTO> categories = categoryRepository.findAll();
         model.addAttribute("categories", categories);
-        return "product/editProduct"; // View for editing a product
+        return "product/productEdit"; // View for editing a product
     }
 
     /**
