@@ -6,8 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import three.finalproject.member.domain.Member;
-import three.finalproject.session.SessionConst;
+import three.finalproject.member.domain.dto.MemberDTO;
 
 @Slf4j
 @Controller
@@ -15,22 +14,22 @@ public class HomeController {
 
     @GetMapping("/")
     public String homeLogin(HttpServletRequest request, Model model) {
-
+        // 기존 세션이 없으면 홈 화면으로 이동
         HttpSession session = request.getSession(false);
-
-        if(session == null) {
+        if (session == null) {
             return "index/home";
         }
 
-        Member loginUser = (Member)session.getAttribute(SessionConst.LOGIN_USER);
+        // 세션에서 로그인 정보를 가져옴
+        MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
 
-        //세션에 회원 데이터가 없으면 home
-        if(loginUser == null) {
+        // 로그인 정보가 없으면 홈 화면으로 이동
+        if (loginMember == null) {
             return "index/home";
         }
 
-        //세션이 유지되면 로그인으로 이동
-        model.addAttribute("member", loginUser);
+        // 세션이 유지되면 로그인 홈으로 이동
+        model.addAttribute("member", loginMember);
         return "index/loginHome";
     }
 }

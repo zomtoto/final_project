@@ -1,0 +1,21 @@
+<header id="header" class="header-logo-area" th:fragment="header">
+    <!-- 네비게이션 바 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">홈</a>
+            <ul class="navbar-menu">
+                <li><a th:href="@{/product/products}">상품 관리</a></li>
+                <li><a th:href="@{/member/members}">회원 관리</a></li>
+                <li><a th:href="@{/result/results}">분석</a></li>
+                <li><a th:href="@{/buy/buys}">구매내역</a></li>
+            </ul>
+            <div class="navbar-user">
+                <span th:if="${session.loginMember != null}" th:text="'환영합니다, ' + ${session.loginMember.name} + '님'">사용자 이름</span>
+                <form class="navbar-logout" th:action="@{/logout}" method="post" th:if="${session.loginMember != null}">
+                    <button type="submit" class="logout-button">로그아웃</button>
+                </form>
+                <a href="/login" class="login-link" th:if="${session.loginMember == null}">로그인</a>
+            </div>
+        </div>
+    </nav>
+</header>
