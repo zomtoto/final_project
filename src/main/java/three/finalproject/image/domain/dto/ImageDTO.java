@@ -16,4 +16,7 @@ public class ImageDTO {
     private String update_date; //수정날짜(YYYY-MM-DD)
     private String delete; //삭제여부
 
+
+
+
 }

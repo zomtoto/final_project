@@ -15,11 +15,13 @@ import java.util.List;
 @Controller
 @RequestMapping("/member/members")
 public class MemberController {
+
     private final MemberRepository memberRepository;
 
     public MemberController(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
+
 
 
     /**

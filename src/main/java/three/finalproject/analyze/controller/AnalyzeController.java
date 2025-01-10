@@ -135,6 +135,7 @@ public class AnalyzeController {
         if (originalFilename == null || originalFilename.isEmpty()) {
             throw new IOException("Invalid file: No name provided.");
         }
+
         String savedFilename = System.currentTimeMillis() + "_" + originalFilename;
 
         // Use File to construct the full path
@@ -142,7 +143,7 @@ public class AnalyzeController {
         file.transferTo(savedFile);
 
         // Prepare paths for the database
-        String originPath = originalFilename;
+        String originPath = savedFilename;
         String savePath = uploadDir +"/"+ savedFilename; // Relative path for database
 
         // 1) DB에 새 이미지 정보 INSERT → 생성된 PK(=image_no) 획득

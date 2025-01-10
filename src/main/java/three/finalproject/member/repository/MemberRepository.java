@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import three.finalproject.member.domain.dto.MemberDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository

@@ -2,6 +2,9 @@ INSERT INTO member_table (id, password, name, address, email, phone, dob, gender
 VALUES ('kims97', 'password1', '김소희', '서울특별시 첨단로 47', 'kims97@example.com',
         '010-1111-1111', '1997-04-02', '여', 'N', 'False', '2019-01-01');
 INSERT INTO member_table (id, password, name, address, email, phone, dob, gender, admin, delete, joinDate)
+VALUES ('system1', '1234', '관리자', '서울특별시 첨단로 47', 'kims97@example.com',
+        '010-1111-1111', '1997-04-02', '여', 'N', 'False', '2019-01-01');
+INSERT INTO member_table (id, password, name, address, email, phone, dob, gender, admin, delete, joinDate)
 VALUES ('jang821', 'password2', '장현정', '서울특별시 해운대로 31', 'jang821@example.com',
         '010-1111-1112', '1982-07-25', '여', 'N', 'False', '2019-01-06');
 INSERT INTO member_table (id, password, name, address, email, phone, dob, gender, admin, delete, joinDate)
