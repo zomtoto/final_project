@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import three.finalproject.member.domain.dto.LoginMemberDTO;
 import three.finalproject.member.domain.dto.MemberDTO;
 import three.finalproject.member.repository.MemberRepository;
 
@@ -32,7 +33,7 @@ public class MemberController {
      */
     @GetMapping("/{member_no}")
     public String member(@PathVariable long member_no, Model model) {
-        MemberDTO member = memberRepository.findByNo(member_no);
+        LoginMemberDTO member = memberRepository.findByNo(member_no);
         if (member == null) {
             log.warn("Member not found: {}", member_no);
             return "redirect:/member/members";

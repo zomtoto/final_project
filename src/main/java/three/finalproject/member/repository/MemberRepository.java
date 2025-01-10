@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import three.finalproject.member.domain.dto.LoginMemberDTO;
 import three.finalproject.member.domain.dto.MemberDTO;
 
 import java.util.ArrayList;
@@ -31,6 +32,14 @@ public class MemberRepository {
         member.setDelete(rs.getBoolean("delete"));
         return member;
     };
+    private final RowMapper<LoginMemberDTO> loginRowMapper = (rs, rowNum) -> {
+        LoginMemberDTO loginMember = new LoginMemberDTO();
+        loginMember.setMember_no(rs.getLong("member_no"));
+        loginMember.setId(rs.getString("id"));
+        loginMember.setPassword(rs.getString("password"));
+        loginMember.setName(rs.getString("name"));
+        return loginMember;
+    };
 
     public MemberDTO save(MemberDTO member) {
         String sql = "INSERT INTO member_table (id, password, name, dob, gender, email, phone, admin, joinDate, delete) " +
@@ -46,14 +55,14 @@ public class MemberRepository {
     }
 
 
-    public MemberDTO findByNo(Long member_no) {
+    public LoginMemberDTO findByNo(Long member_no) {
         String sql = "SELECT * FROM member_table WHERE member_no = ?";
-        return jdbcTemplate.queryForObject(sql, memberRowMapper, member_no);
+        return jdbcTemplate.queryForObject(sql, loginRowMapper, member_no);
     }
 
-    public MemberDTO findById(String id) {
+    public LoginMemberDTO findById(String id) {
         String sql = "SELECT * FROM member_table WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, memberRowMapper, id);
+        return jdbcTemplate.queryForObject(sql, loginRowMapper, id);
     }
 
     public List<MemberDTO> findAll() {

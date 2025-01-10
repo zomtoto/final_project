@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import three.finalproject.member.domain.dto.LoginMemberDTO;
 import three.finalproject.member.domain.dto.MemberDTO;
 
 @Slf4j
@@ -21,7 +22,7 @@ public class HomeController {
         }
 
         // 세션에서 로그인 정보를 가져옴
-        MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
+        LoginMemberDTO loginMember = (LoginMemberDTO) session.getAttribute("loginMember");
 
         // 로그인 정보가 없으면 홈 화면으로 이동
         if (loginMember == null) {

@@ -18,7 +18,7 @@ public class ImageRepository {
     private final RowMapper<ImageDTO> imageRowMapper = (rs, rowNum) -> {
         ImageDTO image = new ImageDTO();
         image.setImage_no(rs.getLong("image_no"));
-        image.setProduct_no(rs.getLong("product_no"));
+        image.getProduct().setProduct_no(rs.getLong("product_no"));
         image.setOrigin_path(rs.getString("origin_path"));
         image.setSave_path(rs.getString("save_path"));
         image.setSave_date(rs.getString("save_date"));
@@ -30,7 +30,7 @@ public class ImageRepository {
     public void save(ImageDTO image) {
         String sql = "INSERT INTO image_table (product_no, origin_path, save_path, save_date, update_date, delete) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, image.getProduct_no(), image.getOrigin_path(), image.getSave_path(),
+        jdbcTemplate.update(sql, image.getProduct().getProduct_no(), image.getOrigin_path(), image.getSave_path(),
                 image.getSave_date(), image.getUpdate_date(), image.getDelete());
     }
 
@@ -38,6 +38,11 @@ public class ImageRepository {
     public List<ImageDTO> findByProductNo(Long product_no) {
         String sql = "SELECT * FROM image_table WHERE product_no = ? AND delete = 'F'";
         return jdbcTemplate.query(sql, imageRowMapper, product_no);
+    }
+
+    public List<ImageDTO> getAllImages() {
+        String sql ="SELECT * FROM image_table";
+        return jdbcTemplate.query(sql, imageRowMapper);
     }
 
     public ImageDTO findByNo(Long image_no) {

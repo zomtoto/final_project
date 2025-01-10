@@ -11,7 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import three.finalproject.member.domain.dto.MemberDTO;
+import three.finalproject.member.domain.dto.LoginMemberDTO;
 
 @Slf4j
 @Controller
@@ -40,7 +40,7 @@ public class LoginController {
         * 여기서 만들어놓은 MemberDTO는 어떠한 용도인지 알수가없다. 명확히 하는게 좋음
         * 로그인하는 용도이면 LoginSessionDTO 라 만들어 사용하는게 현명하다.
         * */
-        MemberDTO loginMember = loginService.login(form.getMember_id(), form.getMember_password());
+        LoginMemberDTO loginMember = loginService.login(form.getMember_id(), form.getMember_password());
 
         if(loginMember == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 틀렸습니다.");
