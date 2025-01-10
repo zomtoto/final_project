@@ -16,6 +16,7 @@ public class ProductRepository {
 
     private final RowMapper<ProductDTO> productRowMapper = (rs, rowNum) -> {
         ProductDTO product = new ProductDTO();
+        product.setProduct_no(rs.getLong("product_no"));
         product.setCategory_no(rs.getLong("category_no"));
         product.setName(rs.getString("name"));
         product.setCompany(rs.getString("company"));
@@ -61,7 +62,7 @@ public class ProductRepository {
     }
 
     public List<ProductDTO> findAll() {
-        String sql = "SELECT * FROM product_table WHERE delete = 'F'";
+        String sql = "SELECT * FROM product_table";
         return jdbcTemplate.query(sql, productRowMapper);
     }
 

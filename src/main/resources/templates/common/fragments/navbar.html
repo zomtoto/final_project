@@ -4,14 +4,19 @@
         <div class="navbar-container">
             <a href="/" class="navbar-brand">홈</a>
             <ul class="navbar-menu">
-                <li><a th:href="@{/product/products}">상품 관리</a></li>
-                <li><a th:href="@{/member/members}">회원 관리</a></li>
+                <li class="dropdown dropdown-toggle">상품
+                    <ul class="dropdown-menu">
+                       <li><a th:href="@{/category/categories}">카테고리 관리</a></li>
+                       <li><a th:href="@{/product/products}">상품 관리</a></li>
+                    </ul>
+                </li>
                 <li class="dropdown dropdown-toggle">분석
                     <ul class="dropdown-menu">
                         <li><a th:href="@{/analyze/analyzes/add}">업로드</a></li>
                         <li><a th:href="@{/analyze/analyzes}">분석 페이지</a></li>
                     </ul>
                 </li>
+                <li><a th:href="@{/member/members}">회원 관리</a></li>
                 <li><a th:href="@{/buy/buys}">구매내역</a></li>
             </ul>
             <div class="navbar-user">

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE HTML>
+        <html xmlns:th="http://www.thymeleaf.org">
+        <head>
+        <meta charset="UTF-8">
+        <title>Edit Analysis</title>
+</head>
+<body>
+<div class="container">
+    <h3>Edit Analysis</h3>
+    <form th:action="@{/analyze/analyzes/{image_no}/edit(image_no=${analyze.image_no})}" th:object="${analyze}" method="post">
+        <label>Year:</label>
+        <input type="number" th:field="*{analyze_year}" required>
+        <label>Graph Type:</label>
+        <input type="text" th:field="*{graph_type}" required>
+        <label>Image Name:</label>
+        <input type="text" th:field="*{image_name}" required>
+        <label>Image Description:</label>
+        <textarea th:field="*{image_description}" required></textarea>
+        <label>Member No:</label>
+        <input type="number" th:field="*{member_no}" required>
+        <button type="submit">Save</button>
+        <a th:href="@{/analyze/analyzes}">Cancel</a>
+    </form>
+</div>
+</body>
+</html>
+</title>
+</head>
+<body>
+
+</body>
+</html>

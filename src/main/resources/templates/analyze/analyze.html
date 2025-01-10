@@ -1,10 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Analysis Details</title>
 </head>
 <body>
+
+<div class="container mt-4">
+    <h3 class="text-center">Analysis Details</h3>
+
+    <!-- 실제 이미지 표시 (img 태그) -->
+    <div class="mb-3">
+        <label class="form-label">Image:</label>
+        <!-- 서버에 저장된 파일 경로(예: /uploads/xxxx.jpg)를 사용 -->
+        <img th:src="${image.save_path}" alt="Uploaded Image"
+             style="max-width: 300px; height: auto;" />
+    </div>
+
+    <!-- 원한다면, 이미지의 원본 파일명(origin_path)도 표시 -->
+    <div class="mb-3">
+        <label class="form-label">Original Filename:</label>
+        <span th:text="${image.origin_path}"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Image Description:</label>
+        <span th:text="${analyze.image_description}"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Year:</label>
+        <span th:text="${analyze.analyze_year}"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Graph Type:</label>
+        <span th:text="${analyze.graph_type}"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Uploaded By Member No:</label>
+        <span th:text="${analyze.member_no}"></span>
+    </div>
+
+    <div class="mt-3">
+        <a class="btn btn-secondary" th:href="@{/analyze/analyzes}">Back to List</a>
+    </div>
+</div>
 
 </body>
 </html>

@@ -1,9 +1,11 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content">
 <head>
     <meta charset="utf-8">
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container {
             max-width: 560px;
@@ -29,7 +31,12 @@
         </div>
 
         <div>
-            <label for="out_price">가격</label>
+            <label for="in_price">입고가</label>
+            <input type="text" id="in_price" class="form-control" th:field="*{in_price}">
+        </div>
+
+        <div>
+            <label for="out_price">판매가</label>
             <input type="text" id="out_price" class="form-control" th:field="*{out_price}">
         </div>
 

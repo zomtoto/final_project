@@ -8,7 +8,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import three.finalproject.category.domain.Category;
 import three.finalproject.category.repository.CategoryRepository;
 import three.finalproject.category.domain.dto.CategoryDTO;
 
@@ -31,7 +30,7 @@ public class CategoryController {
 
     @GetMapping("/add")
     public String addForm(Model model) {
-        model.addAttribute("category", new Category());
+        model.addAttribute("category", new CategoryDTO());
         return "category/categoryAddForm";
     }
 
