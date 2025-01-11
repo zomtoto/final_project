@@ -36,8 +36,9 @@
             <button class="btn btn-secondary" th:onclick="|location.href='@{/analyze/analyzes}'|">취소</button>
 
         </div>
+
         <!--Hidden Fields-->
-        <input type="hidden" name="member_no" value="1"> <!-- Example member number
+        <input type="hidden" name="member_no" th:value="${session.loginMember.member_no}"> <!-- Example member number
 
 
         -->

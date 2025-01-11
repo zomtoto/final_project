@@ -52,6 +52,8 @@ CREATE TABLE image_table (
                              product_no INTEGER NULL,                       -- 상품번호 (FK, nullable)
                              origin_path VARCHAR(255),                      -- 원본이미지 경로
                              save_path VARCHAR(255),                        -- 저장 이미지 경로
+                             image_name VARCHAR(255) NOT NULL,                    -- 이미지 이름
+                             image_description TEXT,                              -- 이미지(분석) 설명
                              save_date DATE,                         -- 저장날짜 (stored as string in YYYY-MM-DD format)
                              update_date DATE,                       -- 수정날짜 (stored as string in YYYY-MM-DD format)
                              delete VARCHAR(10) CHECK (delete IN ('True', 'False')), -- 삭제 여부
@@ -64,8 +66,6 @@ CREATE TABLE analyze_table (
                                member_no INTEGER NOT NULL,                          -- 회원번호 (FK, member_table)
                                analyze_year INTEGER NOT NULL,                               -- 연도 // 이미지 관련 연도 기입
                                graph_type VARCHAR(255) NOT NULL,                        -- 그래프 종류
-                               image_name VARCHAR(255) NOT NULL,                    -- 이미지 이름
-                               image_description TEXT,                              -- 이미지(분석) 설명
                                FOREIGN KEY (image_no) REFERENCES image_table(image_no), -- FK to image_table
                                FOREIGN KEY (member_no) REFERENCES member_table(member_no) -- FK to member_table
 );

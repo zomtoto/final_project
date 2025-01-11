@@ -32,55 +32,33 @@ public class AnalyzeController {
 
     // List all analyzes with pagination
     @GetMapping
-    public String getAnalyzes(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
-            Model model) {
-        int offset = (page - 1) * size;
-        List<AnalyzeDTO> analyzes = analyzeRepository.findPaginated(offset, size);
-
-        int totalCount = analyzeRepository.countAnalyzes();
-        int totalPages = (int)Math.ceil((double) totalCount / size);
-
-        int maxPagesToShow = 10;
-        int startPage = Math.max(1, page - maxPagesToShow / 2);
-        int endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-
-        if (endPage - startPage + 1 < maxPagesToShow && startPage > 1) {
-            startPage = Math.max(1, endPage - maxPagesToShow + 1);
-        }
+    public String getAnalyzes(Model model) {
+        List<AnalyzeDTO> analyzes = analyzeRepository.findAll();
 
         model.addAttribute("analyzes", analyzes);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("pageSize", size);
 
         return "analyze/analyzes";
     }
 
     @GetMapping("/{image_no}")
     public String analyze(@PathVariable Long image_no, Model model) {
-        ImageDTO image = imageRepository.findByNo(image_no);
-        AnalyzeDTO analyze = analyzeRepository.findByImageNo(image_no);
-        if(image == null) {
+        AnalyzeDTO analyze = analyzeRepository.getAnalyzeByImageNo(image_no);
+        if(analyze == null) {
             log.warn("사진이 존재하지 않습니다.: {}", image_no);
             return "redirect:/analyze/analyzes";
         }
-        model.addAttribute("image", image);
         model.addAttribute("analyze", analyze);
         return "analyze/analyze";
     }
 
-    // Filter analyzes by year
+/*    // Filter analyzes by year
     @GetMapping("/filter/{year}")
     public String filterByYear(@PathVariable int year, Model model) {
         List<AnalyzeDTO> analyzes = analyzeRepository.findByYear(year);
         model.addAttribute("analyze", analyzes);
         model.addAttribute("years", analyzeRepository.findUniqueYears());
         return "analyze/analyzes";
-    }
+    }*/
 
     // Edit an analysis (form)
     @GetMapping("/{image_no}/edit")
@@ -114,11 +92,11 @@ public class AnalyzeController {
 
     @PostMapping("/add")
     public String addAnalyze(
-            @RequestParam("member_no") Long memberNo,
-            @RequestParam("analyze_year") Integer year,
-            @RequestParam("graph_type") String graphType,
-            @RequestParam("image_name") String imageName,
-            @RequestParam("image_description") String imageDescription,
+            @RequestParam("member_no") Long member_no,
+            @RequestParam("analyze_year") Integer analyze_year,
+            @RequestParam("graph_type") String graph_type,
+            @RequestParam("image_name") String image_name,
+            @RequestParam("image_description") String image_description,
             @RequestParam("file") MultipartFile file
     ) throws IOException {
         // Ensure the upload directory exists
@@ -147,22 +125,23 @@ public class AnalyzeController {
         String savePath = uploadDir +"/"+ savedFilename; // Relative path for database
 
         // 1) DB에 새 이미지 정보 INSERT → 생성된 PK(=image_no) 획득
-        Long generatedImageNo = analyzeRepository.addImage(originPath, savePath);
+        Long generatedImageNo = analyzeRepository.addImage(originPath, savePath, image_name, image_description);
 
         // Create and save AnalyzeDTO
         AnalyzeDTO analyzeDTO = new AnalyzeDTO();
-        analyzeDTO.setImage_no(generatedImageNo);
-        analyzeDTO.setMember_no(memberNo);
-        analyzeDTO.setAnalyze_year(year);
-        analyzeDTO.setGraph_type(graphType);
-        analyzeDTO.setImage_name(imageName);
-        analyzeDTO.setImage_description(imageDescription);
+
+        analyzeDTO.getImage().setImage_no(generatedImageNo);
+        analyzeDTO.getMember().setMember_no(member_no);
+        analyzeDTO.setAnalyze_year(analyze_year);
+        analyzeDTO.setGraph_type(graph_type);
+        analyzeDTO.getImage().setImage_name(image_name);
+        analyzeDTO.getImage().setImage_description(image_description);
 
         // Save to the database
-        analyzeRepository.addAnalyze(analyzeDTO, generatedImageNo);
+        analyzeRepository.addAnalyze(analyzeDTO);
 
         // Redirect to the analyze detail page with the new image_no
-        return "redirect:/analyze/analyzes/" + generatedImageNo;
+        return "redirect:/analyze/analyzes";
     }
 
 }

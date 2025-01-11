@@ -53,14 +53,7 @@
 
     <!-- Filter and Add Buttons -->
     <div class="row my-3">
-        <div class="btn-group" role="group">
-            <button class="btn btn-secondary" th:onclick="|location.href='@{/member/members}'|">전체</button>
-            <button th:each="year : ${years}" class="btn btn-primary"
-                    th:onclick="|location.href='@{/member/members/filter/{year}(year=${year})}'|"
-                    th:text="${year} + '년'">
-                2025년
-            </button>
-        </div>
+
         <div class="col text-end">
             <button class="btn btn-primary"
                     th:onclick="|location.href='@{/member/members/add}'|"
