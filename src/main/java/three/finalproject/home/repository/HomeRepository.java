@@ -44,4 +44,13 @@ public class HomeRepository {
         return jdbcTemplate.queryForObject(sql, Long.class);
     }
 
+    public Long getYearlyAmount(int year_year) {
+        String sql = """
+                select sum(TOTAL_PRICE) from BUY_TABLE
+                where date 
+                between ? and ?
+                """;
+        return jdbcTemplate.queryForObject(sql, Long.class, year_year, year_year-1);
+    }
+
 }
