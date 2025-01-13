@@ -1,6 +1,7 @@
 package three.finalproject.member.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,22 +15,11 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequestMapping("/member/members")
+@RequiredArgsConstructor
 public class MemberController {
 
     private final MemberRepository memberRepository;
 
-    public MemberController(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
-
-
-
-    /**
-     * 회원 상세정보
-     * @param member_no 회원 PK
-     * @param model 모델
-     * @return
-     */
     @GetMapping("/{member_no}")
     public String member(@PathVariable long member_no, Model model) {
         MemberDTO member = memberRepository.findByNo(member_no);
