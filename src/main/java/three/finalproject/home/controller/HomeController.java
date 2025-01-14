@@ -39,9 +39,21 @@ public class HomeController {
         // 세션이 유지되면 로그인 홈으로 이동
         int memberCount = homeRepository.getMemberCount(); //현재 누적 회원 개수
         Long buyAmount = homeRepository.getBuyAmount(); //현재 판매 누적 금액
+        Long yearly_19 = homeRepository.getYearlyAmount(2019);
+        Long yearly_20 = homeRepository.getYearlyAmount(2020);
+        Long yearly_21 = homeRepository.getYearlyAmount(2021);
+        Long yearly_22 = homeRepository.getYearlyAmount(2022);
+        Long yearly_23 = homeRepository.getYearlyAmount(2023);
 
         model.addAttribute("memberCount", memberCount);
         model.addAttribute("buyAmount", buyAmount);
+
+        model.addAttribute("yearly_19", yearly_19);
+        model.addAttribute("yearly_20", yearly_20);
+        model.addAttribute("yearly_21", yearly_21);
+        model.addAttribute("yearly_22", yearly_22);
+        model.addAttribute("yearly_23", yearly_23);
+
         model.addAttribute("member", loginMember);
         return "index/loginHome";
     }

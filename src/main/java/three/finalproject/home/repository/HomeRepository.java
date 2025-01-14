@@ -45,12 +45,14 @@ public class HomeRepository {
     }
 
     public Long getYearlyAmount(int year_year) {
+        String startDate = year_year + "-01-01";
+        String endDate = year_year + "-12-31";
         String sql = """
                 select sum(TOTAL_PRICE) from BUY_TABLE
                 where date 
                 between ? and ?
                 """;
-        return jdbcTemplate.queryForObject(sql, Long.class, year_year, year_year-1);
+        return jdbcTemplate.queryForObject(sql, Long.class, startDate, endDate);
     }
 
 }
