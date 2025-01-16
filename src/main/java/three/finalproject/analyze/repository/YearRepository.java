@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import three.finalproject.analyze.domain.dto.AnalyzeDTO;
 import three.finalproject.analyze.domain.dto.YearDTO;
 
 import java.sql.ResultSet;
@@ -22,14 +21,13 @@ public class YearRepository {
         @Override
         public YearDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             YearDTO year = new YearDTO();
-            //year.setYear_no(rs.getLong("year_no"));
             year.setAnalyze_year(rs.getInt("analyze_year"));
             return year;
         }
     }
 
     //Find all year_no in year_table
-    public List<YearDTO> findAllYear() {
+    public List<YearDTO> findAllYears() {
         String sql = """
                 SELECT year_year AS analyze_year
                 FROM year_table

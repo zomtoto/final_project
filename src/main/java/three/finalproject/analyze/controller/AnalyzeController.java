@@ -15,8 +15,6 @@ import three.finalproject.analyze.domain.dto.YearDTO;
 import three.finalproject.analyze.repository.AnalyzeRepository;
 import three.finalproject.analyze.repository.GraphRepository;
 import three.finalproject.analyze.repository.YearRepository;
-import three.finalproject.image.domain.dto.ImageDTO;
-import three.finalproject.image.repository.ImageRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +89,7 @@ public class AnalyzeController {
 
     @GetMapping("/add")
     public String addAnalyze(Model model) {
-        List<YearDTO> years = yearRepository.findAllYear();
+        List<YearDTO> years = yearRepository.findAllYears();
         List<GraphDTO> graphs = graphRepository.findAllGraphs();
 
         model.addAttribute("analyze", new AnalyzeDTO());

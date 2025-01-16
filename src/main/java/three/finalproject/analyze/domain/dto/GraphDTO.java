@@ -9,5 +9,5 @@ import lombok.ToString;
 @ToString
 public class GraphDTO {
     private Long graph_no;
-    private String graph_name;
+    private String graph_type;
 }
