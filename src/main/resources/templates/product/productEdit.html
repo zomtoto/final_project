@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="utf-8">
+    <style>
+        .container {
+            max-width: 560px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>상품 수정 폼</h2>
+    </div>
+    <form action="product.html" th:action th:object="${product}" method="post">
+
+        <div>
+            <label for="product_no">상품 ID</label>
+            <input type="text" id="product_no"  class="form-control" th:field="*{product_no}" readonly>
+        </div>
+
+        <div>
+            <label for="productName">상품명</label>
+            <input type="text" id="productName" class="form-control" th:field="*{name}">
+        </div>
+
+        <div>
+            <label for="in_price">입고가</label>
+            <input type="text" id="in_price" class="form-control" th:field="*{in_price}">
+        </div>
+
+        <div>
+            <label for="out_price">판매가</label>
+            <input type="text" id="out_price" class="form-control" th:field="*{out_price}">
+        </div>
+
+        <div>
+            <label for="quantity">수량</label>
+            <input type="text" id="quantity" class="form-control" th:field="*{quantity}">
+        </div>
+
+        <hr class="my-4">
+
+        <!--single checkbox-->
+        <div>각인 서비스</div>
+        <div>
+            <div class="form-check">
+                <input type="checkbox" id="open" th:field="*{seal_service}" class="form-check-input">
+                <label for="open" class="form-check-label">각인 가능</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" type="submit">저장</button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg"
+                        onclick="location.href='product.html'"
+                        th:onclick="|location.href='@{/product/products/{product_no}(product_no=${product.product_no})}'|"
+                        type="button">취소</button>
+            </div>
+        </div>
+    </form>
+</div> <!-- /container -->
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="utf-8">
+    <title>이미지 업로드</title>
+    <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            background-color: white;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card" style="width: 600px;">
+        <form th:action="@{/analyze/analyzes/add}" th:object="${analyze}" method="post" enctype="multipart/form-data" data-add-form>
+            <div class="text-center mb-4">
+                <h2>이미지 업로드</h2>
+            </div>
+            <div class="form-group mb-3">
+                <label for="file">이미지 파일:</label>
+                <input type="file" id="file" name="file" class="form-control" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="image_name">이미지 이름:</label>
+                <input type="text" id="image_name" name="image_name" class="form-control" placeholder="이미지 이름을 입력하세요" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="year">연도:</label>
+                <input type="number" id="year" name="analyze_year" class="form-control" placeholder="연도를 입력하세요" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="graph_type">그래프 유형:</label>
+                <input type="text" id="graph_type" name="graph_type" class="form-control" placeholder="그래프 유형을 입력하세요" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="image_description">이미지 설명:</label>
+                <textarea id="image_description" name="image_description" class="form-control" placeholder="이미지 설명을 입력하세요" rows="3" required></textarea>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+                <button class="btn btn-primary" type="submit">확인</button>
+                <button class="btn btn-secondary" th:onclick="|location.href='@{/analyze/analyzes}'|">취소</button>
+            </div>
+            <!-- Hidden Fields -->
+            <input type="hidden" name="member_no" th:value="${session.loginMember.member_no}">
+        </form>
+    </div>
+</div>
+</body>
+</html>

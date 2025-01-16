@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--Thymeleaf, ConfigFragment 선언-->
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="ConfigFragment">
+<head>
+    <!--Common Head-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport"  content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes,initial-scale=1.0"/>
+    <title>test</title>
+
+    <!--Common Js -->
+    <script th:src="@{/navbar/js/nav.js}" th:inline="none" defer></script>
+    <script th:src="@{/common/js/transition.js}" th:inline="none" defer></script>
+
+    <!--Common CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap_min.css}" />
+    <link rel="stylesheet" th:href="@{/common/css/transition.css}" />
+    <link th:href="@{https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@200;400;700;900&display=swap}" rel="stylesheet" />
+
+    <link rel="stylesheet" th:href="@{/navbar/css/navbar.css}" />
+<!--    <link rel="stylesheet" th:href="@{/css/common.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />-->
+
+
+</head>
