@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="container" style="max-width: 600px; margin-top: 20px;">
-    <form th:action="@{/analyze/analyzes/add}" th:object="${analyze}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/analyze/analyzes/add}" th:object="${analyze}" method="post" enctype="multipart/form-data" data-add-form>
         <div>
             <label for="file">Upload Image:</label>
             <input type="file" id="file" name="file" required>
