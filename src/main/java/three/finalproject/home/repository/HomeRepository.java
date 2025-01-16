@@ -22,7 +22,7 @@ public class HomeRepository {
         @Override
         public HomeDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             HomeDTO home = new HomeDTO();
-            home.getYear().setYear_year(rs.getInt("year_year"));
+            home.getYear().setAnalyze_year(rs.getInt("analyze_year"));
             home.getMember().setName(rs.getString("member_name")); //rename name-> member_name
             home.getProduct().setName(rs.getString("product_name")); //rename name-> product_name
             home.setProduct_quantity(rs.getInt("product_quantity")); //상품 누정 개수

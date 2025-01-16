@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import three.finalproject.analyze.domain.dto.AnalyzeDTO;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import three.finalproject.analyze.domain.dto.YearDTO;
 import three.finalproject.member.domain.dto.MemberDTO;
 
 import java.sql.PreparedStatement;
@@ -73,6 +74,8 @@ public class AnalyzeRepository {
                 analyzeDTO.getGraph_type());
 
     }
+
+
 
     public List<AnalyzeDTO> findAll() {
         String sql = """

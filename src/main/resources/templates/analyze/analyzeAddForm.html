@@ -9,27 +9,36 @@
 </head>
 <body>
 <div class="container" style="max-width: 600px; margin-top: 20px;">
-    <form th:action="@{/analyze/analyzes/add}" th:object="${analyze}" method="post" enctype="multipart/form-data" data-add-form>
-        <div>
+    <form th:action="@{/analyze/analyzes/add}" th:object="${analyze}" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
             <label for="file">Upload Image:</label>
-            <input type="file" id="file" name="file" required>
+            <input type="file" id="file" name="file" class="form-control" required >
         </div>
-        <div>
+        <div class="mb-3">
             <label for="image_name">Image Name:</label>
-            <input type="text" id="image_name" name="image_name" required>
+            <input type="text" id="image_name" name="image_name" class="form-control" required>
         </div>
-
-        <div>
-            <label for="year">Year:</label>
-            <input type="number" id="year" name="analyze_year" required>
+        <!--연도 드롭다운-->
+        <div class="mb-3">
+            <label for="analyze_year">연도</label>
+            <select id="analyze_year" th:field="${analyze.analyze_year}" class="form-control">
+                <option value="" disabled selected>연도를 선택하세요</option>
+                <option class="form-select"
+                        th:each="year : ${years}"
+                        th:value="${year.analyze_year}"
+                        th:text="${year.analyze_year}"
+                        th:name="analyze_year"></option>
+            <!--<input type="number" id="year" name="analyze_year" class="form-control" required>-->
+            </select>
         </div>
-        <div>
+        <!--그래프 드롭다운-->
+        <div class="mb-3">
             <label for="graph_type">Graph Type:</label>
-            <input type="text" id="graph_type" name="graph_type" required>
+            <input type="text" id="graph_type" name="graph_type" class="form-control" required>
         </div>
-        <div>
+        <div class="mb-3">
             <label for="image_description">Image Description:</label>
-            <textarea id="image_description" name="image_description" required></textarea>
+            <textarea id="image_description" name="image_description" class="form-control" required></textarea>
         </div>
         <div class="mt-3">
             <button class="btn btn-primary" type="submit">확인</button>

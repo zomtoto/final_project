@@ -9,5 +9,5 @@ import lombok.ToString;
 @ToString
 public class YearDTO {
     private Long year_no;
-    private Integer year_year;
+    private Integer analyze_year;
 }

@@ -10,7 +10,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import three.finalproject.analyze.domain.dto.AnalyzeDTO;
+import three.finalproject.analyze.domain.dto.GraphDTO;
+import three.finalproject.analyze.domain.dto.YearDTO;
 import three.finalproject.analyze.repository.AnalyzeRepository;
+import three.finalproject.analyze.repository.GraphRepository;
+import three.finalproject.analyze.repository.YearRepository;
 import three.finalproject.image.domain.dto.ImageDTO;
 import three.finalproject.image.repository.ImageRepository;
 
@@ -25,7 +29,8 @@ import java.util.List;
 public class AnalyzeController {
 
     private final AnalyzeRepository analyzeRepository;
-    private final ImageRepository imageRepository;
+    private final YearRepository yearRepository;
+    private final GraphRepository graphRepository;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -86,7 +91,12 @@ public class AnalyzeController {
 
     @GetMapping("/add")
     public String addAnalyze(Model model) {
+        List<YearDTO> years = yearRepository.findAllYear();
+        List<GraphDTO> graphs = graphRepository.findAllGraphs();
+
         model.addAttribute("analyze", new AnalyzeDTO());
+        model.addAttribute("years", years);
+        model.addAttribute("graphs", graphs);
         return "analyze/analyzeAddForm";
     }
 
