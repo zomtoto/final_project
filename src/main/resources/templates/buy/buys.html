@@ -6,7 +6,7 @@
       layout:fragment="Content">
 <head>
     <meta charset="utf-8">
-    <title>회원 목록</title>
+    <title>구매 목록</title>
     <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
         .pagination-container {
@@ -43,67 +43,80 @@
             pointer-events: none;
             background-color: #f8f9fa;
         }
+
+        .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            background-color: white;
+        }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
-<div class="container" style="max-width: 800px; margin-top: 20px;">
-    <div class="text-center">
-        <h2>구매 목록</h2>
+<div class="d-flex justify-content-center" style="margin-top: 20px;">
+    <div class="card" style="width: 1000px;">
+        <div class="text-center mb-4">
+            <h2>구매 내역</h2>
+        </div>
+
+        <!-- Buy Table -->
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>구매번호</th>
+                <th>구매날짜</th>
+                <th>회원</th>
+                <th>상품</th>
+                <th>구매수량</th>
+                <th>각인여부</th>
+                <th>총구매액</th>
+                <th>구매방식</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="buy : ${buys}">
+                <td th:text="${buy.buy_no}"></td>
+                <td th:text="${buy.date}"></td>
+                <td th:text="${buy.member.name}"></td>
+                <td th:text="${buy.product.name}"></td>
+                <td th:text="${buy.quantity}"></td>
+                <td th:text="${buy.seal_service}"></td>
+                <td th:text="${buy.total_price}"></td>
+                <td th:text="${buy.method}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <ul class="pagination">
+                <!-- Previous Button -->
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/buy/buyss(page=${currentPage - 1}, size=${pageSize})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <!-- Pagination Links -->
+                <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${page == currentPage} ? 'active' : ''">
+                    <a class="page-link" th:href="@{/buy/buys(page=${page}, size=${pageSize})}" th:text="${page}"></a>
+                </li>
+
+                <!-- Next Button -->
+                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/buy/buys(page=${currentPage + 1}, size=${pageSize})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
-
-    <!-- Buy Table -->
-    <table class="table table-striped table-bordered">
-        <thead>
-        <tr>
-            <th>구매번호</th>
-            <th>구매날짜</th>
-            <th>회원</th>
-            <th>상품</th>
-            <th>구매수량</th>
-            <th>각인여부</th>
-            <th>총구매액</th>
-            <th>구매방식</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="buy : ${buys}">
-            <td th:text="${buy.buy_no}"></td>
-            <td th:text="${buy.date}"></td>
-            <td th:text="${buy.member.name}"></td>
-            <td th:text="${buy.product.name}"></td>
-            <td th:text="${buy.quantity}"></td>
-            <td th:text="${buy.seal_service}"></td>
-            <td th:text="${buy.total_price}"></td>
-            <td th:text="${buy.method}"></td>
-        </tr>
-        </tbody>
-    </table>
-
-    <!-- Pagination -->
-    <div class="pagination-container">
-        <ul class="pagination">
-            <!-- Previous Button -->
-            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled' : ''">
-                <a class="page-link" th:href="@{/buy/buyss(page=${currentPage - 1}, size=${pageSize})}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-
-            <!-- Pagination Links -->
-            <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}"
-                th:classappend="${page == currentPage} ? 'active' : ''">
-                <a class="page-link" th:href="@{/buy/buys(page=${page}, size=${pageSize})}" th:text="${page}"></a>
-            </li>
-
-            <!-- Next Button -->
-            <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled' : ''">
-                <a class="page-link" th:href="@{/buy/buys(page=${currentPage + 1}, size=${pageSize})}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-
 </div>
 </body>
 </html>
