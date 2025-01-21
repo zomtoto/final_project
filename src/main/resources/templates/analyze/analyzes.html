@@ -9,90 +9,78 @@
     <title>분석 목록</title>
     <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .pagination-container {
+        .analyze-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            height: 100%; /* 동일 높이 설정 */
+        }
+
+        .analyze-card img {
+            width: 100%; /* 모든 이미지를 같은 비율로 조정 */
+            height: 200px; /* 고정 높이 */
+            object-fit: cover; /* 이미지 비율 유지하며 자르기 */
+            border-radius: 5px;
+        }
+
+        .row {
             display: flex;
-            justify-content: center;
-            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        .pagination-container ul {
-            padding-left: 0;
-            list-style: none;
-            display: flex;
+        .col-md-4 {
+            flex: 1 1 calc(33.333% - 10px); /* 한 줄에 3개 배치 */
+            max-width: calc(33.333% - 10px);
+            box-sizing: border-box;
         }
 
-        .pagination-container .page-item {
-            margin: 2px;
+        .container h2 {
+            margin-bottom: 30px;
         }
 
-        .pagination-container .page-link {
-            padding: 0.5rem 0.75rem;
-            border: 1px solid #dee2e6;
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .pagination-container .page-item.active .page-link {
-            background-color: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
-
-        .pagination-container .page-item.disabled .page-link {
-            color: #6c757d;
-            pointer-events: none;
-            background-color: #f8f9fa;
+        /* 테이블 텍스트 가운데 정렬 */
+        .table {
+            text-align: center;
         }
     </style>
 </head>
 <body>
-<div class="container" style="max-width: 800px; margin-top: 20px;">
+<div class="container" style="max-width: 1200px; margin-top: 30px;">
     <div class="text-center">
         <h2>분석 목록</h2>
     </div>
 
-    <!-- Filter and Add Buttons -->
-    <div class="row my-3">
-        <div class="col text-end">
-            <button class="btn btn-primary"
-                    th:onclick="|location.href='@{/analyze/analyzes/add}'|"
-                    type="button">분석 추가
-            </button>
+    <div class="row">
+        <div class="col-md-4" th:each="analyze : ${analyzes}">
+            <div class="analyze-card">
+                <a th:href="@{analyzes/{image_no}(image_no=${analyze.image.image_no})}">
+                    <img th:src="@{/uploads/{filename}(filename=${analyze.image.origin_path})}" alt="분석 이미지" />
+                </a>
+                <p th:text="${analyze.image.image_description}"></p>
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th>Year</th>
+                        <td th:text="${analyze.analyze_year}"></td>
+                    </tr>
+                    <tr>
+                        <th>Graph Type</th>
+                        <td th:text="${analyze.graph_type}"></td>
+                    </tr>
+                    <tr>
+                        <th>Uploaded By</th>
+                        <td th:text="${analyze.member.member_no}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-
-    <!-- Analyzes Container -->
-    <div class="container" th:each="analyze : ${analyzes}">
-
-        <div class="mb-3">
-        <label class="form-label">Image:</label>
-        <!-- 서버에 저장된 파일 경로(예: /uploads/xxxx.jpg)를 사용 -->
-            <a th:href="@{analyzes/{image_no}(image_no =${analyze.image.image_no})}">
-            <img th:if="${analyze.image.origin_path != null}"
-             th:src="@{/uploads/{filename}(filename=${analyze.image.origin_path})}"
-             width="60%" height="60%"
-             alt="상품 메인 이미지" class="main-image" />
-            </a>
-
-        <div class="mb-3">
-            <label class="form-label">Image Description:</label>
-            <span th:text="${analyze.image.image_description}"></span>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Year:</label>
-            <span th:text="${analyze.analyze_year}"></span>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Graph Type:</label>
-            <span th:text="${analyze.graph_type}"></span>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Uploaded By Member No:</label>
-            <span th:text="${analyze.member.member_no}"></span>
-        </div>
-    </div>
     </div>
 </div>
-
 </body>
 </html>

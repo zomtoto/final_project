@@ -67,9 +67,7 @@ CREATE TABLE analyze_table (
                                analyze_year INTEGER NOT NULL,                               -- 연도 // 이미지 관련 연도 기입
                                graph_type VARCHAR(255) NOT NULL,                        -- 그래프 종류
                                FOREIGN KEY (image_no) REFERENCES image_table(image_no), -- FK to image_table
-                               FOREIGN KEY (member_no) REFERENCES member_table(member_no), -- FK to member_table
-                               FOREIGN KEY (analyze_year) REFERENCES year_table(year_year), -- FK to year_table
-                               FOREIGN KEY (graph_type) REFERENCES graph_table(graph_name) -- FK to graph_table
+                               FOREIGN KEY (member_no) REFERENCES member_table(member_no) -- FK to member_table
 );
 
 CREATE TABLE graph_table (
