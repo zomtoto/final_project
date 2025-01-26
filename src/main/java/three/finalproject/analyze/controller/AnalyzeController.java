@@ -92,21 +92,54 @@ public class AnalyzeController {
         List<YearDTO> years = yearRepository.findAllYears();
         List<GraphDTO> graphs = graphRepository.findAllGraphs();
 
-        model.addAttribute("analyze", new AnalyzeDTO());
+        // 로그 혹은 간단한 print로 확인
+        if (graphs.isEmpty()) {
+            log.warn("========== [Graph List is EMPTY!] ==========");
+        } else {
+            for (GraphDTO g : graphs) {
+                log.info("GRAPH DTO => {}", g);
+            }
+        }
+
         model.addAttribute("years", years);
         model.addAttribute("graphs", graphs);
+
         return "analyze/analyzeAddForm";
     }
+
 
     @PostMapping("/add")
     public String addAnalyze(
             @RequestParam("member_no") Long member_no,
             @RequestParam("analyze_year") Integer analyze_year,
-            @RequestParam("graph_type") String graph_type,
+            @RequestParam(name="graph_no") String graphNoString,
             @RequestParam("image_name") String image_name,
             @RequestParam("image_description") String image_description,
-            @RequestParam("file") MultipartFile file
+            @RequestParam("file") MultipartFile file,
+            Model model
     ) throws IOException {
+
+        Long graph_no = Long.valueOf(graphNoString);
+        if (graph_no == -1L) {
+            // 에러 메시지를 모델에 담아 다시 폼으로 돌려보냄
+            model.addAttribute("errorMessage", "그래프를 선택하셔야 합니다.");
+
+            // 필요하면 기존 입력값(멤버, 연도, 이미지 이름 등)도 모델에 다시 담아줌
+            model.addAttribute("member_no", member_no);
+            model.addAttribute("analyze_year", analyze_year);
+            model.addAttribute("image_name", image_name);
+            model.addAttribute("image_description", image_description);
+
+            // 다시 드롭다운에 필요한 데이터도 담아줌
+            List<YearDTO> years = yearRepository.findAllYears();
+            List<GraphDTO> graphs = graphRepository.findAllGraphs();
+            model.addAttribute("years", years);
+            model.addAttribute("graphs", graphs);
+
+            return "analyze/analyzeAddForm"; // 다시 폼으로 이동
+        }
+
+
         // Ensure the upload directory exists
         File directory = new File(uploadDir);
         if (!directory.exists()) {
@@ -130,7 +163,7 @@ public class AnalyzeController {
 
         // Prepare paths for the database
         String originPath = savedFilename;
-        String savePath = uploadDir +"/"+ savedFilename; // Relative path for database
+        String savePath = uploadDir + "/" + savedFilename; // Relative path for database
 
         // 1) DB에 새 이미지 정보 INSERT → 생성된 PK(=image_no) 획득
         Long generatedImageNo = analyzeRepository.addImage(originPath, savePath, image_name, image_description);
@@ -141,7 +174,12 @@ public class AnalyzeController {
         analyzeDTO.getImage().setImage_no(generatedImageNo);
         analyzeDTO.getMember().setMember_no(member_no);
         analyzeDTO.setAnalyze_year(analyze_year);
-        analyzeDTO.setGraph_type(graph_type);
+
+        // 새 구조에 따라 GraphDTO에 graph_no를 설정
+        GraphDTO graph = new GraphDTO();
+        graph.setGraph_no(graph_no);
+        analyzeDTO.setGraph(graph);
+
         analyzeDTO.getImage().setImage_name(image_name);
         analyzeDTO.getImage().setImage_description(image_description);
 
@@ -151,5 +189,6 @@ public class AnalyzeController {
         // Redirect to the analyze detail page with the new image_no
         return "redirect:/analyze/analyzes";
     }
+
 
 }

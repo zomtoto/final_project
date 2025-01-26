@@ -6,13 +6,88 @@
       layout:fragment="Content">
 <head>
     <meta charset="utf-8">
+    <style>
+        /* 컨테이너 스타일링 */
+        .container {
+            margin: 30px auto;
+            padding: 20px;
+            max-width: 600px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 레이블 스타일 */
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        /* 입력 필드 스타일 */
+        input[type="text"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        /* 텍스트 입력 필드와 텍스트 영역 구분 */
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* 버튼 스타일 */
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        button[type="button"],
+        button[type="reset"] {
+            background-color: #6c757d;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button[type="button"]:hover,
+        button[type="reset"]:hover {
+            background-color: #5a6268;
+        }
+
+        /* 폼 요소 간격 조정 */
+        .mb-3 {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
 <div class="container" style="max-width: 600px; margin-top: 20px;">
-    <form th:action="@{/analyze/analyzes/add}" th:object="${analyze}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/analyze/analyzes/add}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="file">Upload Image:</label>
-            <input type="file" id="file" name="file" class="form-control" required >
+            <input type="file" id="file" name="file" class="form-control" required>
         </div>
         <div class="mb-3">
             <label for="image_name">Image Name:</label>
@@ -21,34 +96,28 @@
         <!--연도 드롭다운-->
         <div class="mb-3">
             <label for="analyze_year">연도</label>
-            <select id="analyze_year" th:field="${analyze.analyze_year}" class="form-control">
+            <select id="analyze_year" name="analyze_year" class="form-control">
                 <option value="" disabled selected>연도를 선택하세요</option>
                 <option class="form-select"
                         th:each="year : ${years}"
                         th:value="${year.analyze_year}"
-                        th:text="${year.analyze_year}"
-                        th:name="analyze_year"></option>
-            <!--<input type="number" id="year" name="analyze_year" class="form-control" required>-->
+                        th:text="${year.analyze_year}"></option>
             </select>
         </div>
         <!--그래프 드롭다운-->
-
         <div class="mb-3">
-            <label for="graph_type">연도</label>
-            <select id="graph_type" th:field="${analyze.graph_type}" class="form-control">
-                <option value="" disabled selected>연도를 선택하세요</option>
-                <option class="form-select"
-                        th:each="graph : ${graphs}"
-                        th:value="${graph.graph_type}"
-                        th:text="${graph.graph_type}"
-                        th:name="graph_type"></option>
-                <!--<input type="number" id="year" name="analyze_year" class="form-control" required>-->
+            <label for="graph_no">그래프 타입</label>
+            <select id="graph_no" name="graph_no" class="form-control" required>
+                <option value="-1" disabled selected>그래프 타입을 선택하세요</option>
+                <option th:each="graph : ${graphs}"
+                        th:value="${graph.graph_no}"
+                        th:text="${graph.graph_type}">
+                </option>
             </select>
+            <div th:if="${errorMessage}" style="color: red; font-weight: bold;">
+                <p th:text="${errorMessage}"></p>
+            </div>
         </div>
-        <!--<div class="mb-3">
-            <label for="graph_type">Graph Type:</label>
-            <input type="text" id="graph_type" name="graph_type" class="form-control" required>
-        </div>-->
         <div class="mb-3">
             <label for="image_description">Image Description:</label>
             <textarea id="image_description" name="image_description" class="form-control" required></textarea>
@@ -56,15 +125,11 @@
         <div class="mt-3">
             <button class="btn btn-primary" type="submit">확인</button>
             <button class="btn btn-secondary" th:onclick="|location.href='@{/analyze/analyzes}'|">취소</button>
-
         </div>
-
         <!--Hidden Fields-->
-        <input type="hidden" name="member_no" th:value="${session.loginMember.member_no}"> <!-- Example member number
-
-
-        -->
+        <input type="hidden" name="member_no" th:value="${session.loginMember.member_no}">
     </form>
+
 </div>
 </body>
 </html>

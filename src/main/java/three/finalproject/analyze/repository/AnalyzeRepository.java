@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import three.finalproject.analyze.domain.dto.AnalyzeDTO;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import three.finalproject.analyze.domain.dto.GraphDTO;
 import three.finalproject.analyze.domain.dto.YearDTO;
 import three.finalproject.member.domain.dto.MemberDTO;
 
@@ -29,13 +30,20 @@ public class AnalyzeRepository {
             analyze.getImage().setImage_no(rs.getLong("image_no"));
             analyze.getMember().setMember_no(rs.getLong("member_no"));
             analyze.setAnalyze_year(rs.getInt("analyze_year"));
-            analyze.setGraph_type(rs.getString("graph_type"));
+
+            // 새로운 GraphDTO를 설정
+            GraphDTO graph = new GraphDTO();
+            graph.setGraph_no(rs.getLong("graph_no"));
+            graph.setGraph_type(rs.getString("graph_name"));
+            analyze.setGraph(graph);
+
             analyze.getImage().setImage_name(rs.getString("image_name"));
             analyze.getImage().setImage_description(rs.getString("image_description"));
             analyze.getImage().setOrigin_path(rs.getString("origin_path"));
             return analyze;
         }
     }
+
 
     public Long addImage(String originPath, String savePath, String imageName, String imageDescription) {
         // SQL statement
@@ -64,14 +72,15 @@ public class AnalyzeRepository {
 
     // Add member_no and analysis details to analyze_table
     public void addAnalyze(AnalyzeDTO analyzeDTO) {
-        String sql = "INSERT INTO analyze_table (image_no, member_no, analyze_year, graph_type) " +
+        String sql = "INSERT INTO analyze_table (image_no, member_no, analyze_year, graph_no) " +
                 "VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(
                 sql,
                 analyzeDTO.getImage().getImage_no(),
                 analyzeDTO.getMember().getMember_no(),
                 analyzeDTO.getAnalyze_year(),
-                analyzeDTO.getGraph_type());
+                analyzeDTO.getGraph().getGraph_no());
+
 
     }
 
@@ -79,9 +88,10 @@ public class AnalyzeRepository {
 
     public List<AnalyzeDTO> findAll() {
         String sql = """
-                SELECT i. *, a.MEMBER_NO, a.ANALYZE_YEAR, a.GRAPH_TYPE
-                From image_table i
-                JOIN analyze_table a on i.image_no = a.image_no
+                SELECT i.*, a.member_no, a.analyze_year, g.graph_no, g.graph_name
+                FROM image_table i
+                JOIN analyze_table a ON i.image_no = a.image_no
+                JOIN graph_table g ON a.graph_no = g.graph_no
                 """;
         return jdbcTemplate.query(sql, new AnalyzeRowMapper());
     }
@@ -89,10 +99,11 @@ public class AnalyzeRepository {
     // Retrieve a single record from analyze_table by image_no
     public AnalyzeDTO getAnalyzeByImageNo(Long imageNo) {
         String sql = """
-                SELECT i. *, a.MEMBER_NO, a.ANALYZE_YEAR, a.GRAPH_TYPE
-                From image_table i
-                JOIN analyze_table a on i.image_no = a.image_no
-                where i.image_no = ?
+                SELECT i.*, a.member_no, a.analyze_year, g.graph_no, g.graph_name
+                FROM image_table i
+                JOIN analyze_table a ON i.image_no = a.image_no
+                JOIN graph_table g ON a.graph_no = g.graph_no
+                WHERE i.image_no = ?
                 """;
         return jdbcTemplate.queryForObject(sql, new AnalyzeRowMapper(), imageNo);
     }
@@ -101,9 +112,10 @@ public class AnalyzeRepository {
 
     public List<AnalyzeDTO> findPaginated(int offset, int limit) {
         String sql = """
-                SELECT i. *, a.MEMBER_NO, a.ANALYZE_YEAR, a.GRAPH_TYPE
-                From image_table i
-                JOIN analyze_table a on i.image_no = a.image_no
+                SELECT i.*, a.member_no, a.analyze_year, g.graph_no, g.graph_name
+                FROM image_table i
+                JOIN analyze_table a ON i.image_no = a.image_no
+                JOIN graph_table g ON a.graph_no = g.graph_no
                 LIMIT ? OFFSET ?
                 """;
         return jdbcTemplate.query(sql, new AnalyzeRowMapper(), limit, offset);
@@ -115,16 +127,18 @@ public class AnalyzeRepository {
     }
 
     public List<AnalyzeDTO> findByYear(int year) {
-        String sql = "SELECT * FROM analyze_table WHERE analyze_year = ?";
+        String sql = "SELECT a.*, g.graph_name\n" +
+                "FROM analyze_table a\n" +
+                "JOIN graph_table g ON a.graph_no = g.graph_no\n" +
+                "WHERE a.analyze_year = ?";
         return jdbcTemplate.query(sql, new AnalyzeRowMapper(), year);
     }
 
 
     public void updateAnalyze(Long image_no, AnalyzeDTO analyzeDTO) {
-        String sql = "UPDATE analyze_table SET member_no = ?, analyze_year = ?, graph_type = ? " +
-                "WHERE image_no = ?";
+        String sql = "UPDATE analyze_table SET member_no = ?, analyze_year = ?, graph_no = ? WHERE image_no = ?";
         jdbcTemplate.update(sql, analyzeDTO.getMember().getMember_no(), analyzeDTO.getAnalyze_year(),
-                analyzeDTO.getGraph_type(), analyzeDTO.getImage().getImage_description(), image_no);
+                analyzeDTO.getGraph().getGraph_no(), image_no);
     }
 
 }
