@@ -210,5 +210,19 @@ public class AnalyzeController {
         return "redirect:/analyze/analyzes";
     }
 
+    // 그래프 추가 폼
+    @GetMapping("/graphs/add")
+    public String addGraphForm() {
+        return "analyze/graphAddForm";
+    }
+
+    @PostMapping("/graphs/add")
+    public String addGraph(@RequestParam("graph_type") String graph_type) {
+        // DB에 INSERT
+        graphRepository.addGraph(graph_type);
+
+        // 그래프 추가 후, 분석추가 페이지로 이동(혹은 다른 곳으로 이동 가능)
+        return "redirect:/analyze/analyzes/add";
+    }
 
 }

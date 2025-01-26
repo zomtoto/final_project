@@ -117,6 +117,13 @@
             <div th:if="${errorMessage}" style="color: red; font-weight: bold;">
                 <p th:text="${errorMessage}"></p>
             </div>
+
+            <!-- 새 그래프 추가 버튼 -->
+            <button type="button" class="btn btn-outline-secondary"
+                    th:onclick="|location.href='@{/analyze/analyzes/graphs/add}'|">
+                새로운 그래프 종류 추가
+            </button>
+
         </div>
         <div class="mb-3">
             <label for="image_description">Image Description:</label>
