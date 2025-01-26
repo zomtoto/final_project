@@ -5,3 +5,5 @@ drop table IMAGE_TABLE;
 drop table MEMBER_TABLE;
 drop table PRODUCT_TABLE;
 drop table category_table;
+drop table GRAPH_TABLE;
+drop table YEAR_TABLE;

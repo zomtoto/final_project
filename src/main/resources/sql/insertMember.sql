@@ -3250,3 +3250,6 @@ VALUES ('choh04', 'password999', '조현정', '서울특별시 첨단로 19', 'c
 INSERT INTO member_table (id, password, name, address, email, phone, dob, gender, admin, delete, joinDate)
 VALUES ('jung843', 'password1000', '정지훈', '서울특별시 해운대로 25', 'jung843@example.com',
         '010-1111-2110', '1984-02-28', '여', 'N', 'False', '2023-12-31');
+INSERT INTO member_table (id, password, name, address, email, phone, dob, gender, admin, delete, joinDate)
+VALUES ('system1', '1234', '정지훈', '서울특별시 해운대로 25', 'jung843@example.com',
+        '010-1111-2110', '1984-02-28', '여', 'Y', 'False', '2023-12-31');
