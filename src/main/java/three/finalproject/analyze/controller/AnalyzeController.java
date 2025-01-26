@@ -18,7 +18,10 @@ import three.finalproject.analyze.repository.YearRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Controller
@@ -38,7 +41,24 @@ public class AnalyzeController {
     public String getAnalyzes(Model model) {
         List<AnalyzeDTO> analyzes = analyzeRepository.findAll();
 
+        // 1) analyzes 목록 자체는 계속 model에 저장
         model.addAttribute("analyzes", analyzes);
+
+        // 2) AnalyzeDTO에서 graph.graph_type을 추출하여 중복 없이 Set에 담기
+        //    (혹은 a.getGraph_type() 필드를 사용해도 됨)
+        Set<String> graphTypes = new HashSet<>();
+        for (AnalyzeDTO dto : analyzes) {
+            if (dto.getGraph() != null && dto.getGraph().getGraph_type() != null) {
+                graphTypes.add(dto.getGraph().getGraph_type());
+            }
+        }
+
+        // 3) Set을 List로 변환하여 정렬할 수도 있음
+        List<String> graphTypeList = new ArrayList<>(graphTypes);
+        // Collections.sort(graphTypeList);  // 필요하다면 정렬
+
+        // 4) model에 담아서 뷰로 전달
+        model.addAttribute("graphTypes", graphTypeList);
 
         return "analyze/analyzes";
     }
