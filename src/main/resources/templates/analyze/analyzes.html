@@ -8,6 +8,8 @@
     <meta charset="utf-8">
     <title>분석 목록</title>
     <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- Masonry.js -->
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <style>
         .analyze-card {
             border: 1px solid #ddd;
@@ -47,6 +49,17 @@
         .table {
             text-align: center;
         }
+
+        /* 필터 드롭다운 스타일 (필요하면 변경) */
+        .filter-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-end; /* 우측 정렬 */
+        }
+        .filter-container select {
+            width: 200px;
+            padding: 5px;
+        }
     </style>
 </head>
 <body>
@@ -55,8 +68,21 @@
         <h2>분석 목록</h2>
     </div>
 
+    <!-- 필터를 담는 컨테이너 -->
+    <div class="filter-container">
+        <select id="graphFilter" class="form-control">
+            <option value="">All</option>
+            <!-- graphTypes라는 List<String>을 each -->
+            <option th:each="type : ${graphTypes}"
+                    th:value="${type}"
+                    th:text="${type}"></option>
+        </select>
+    </div>
+
+    <!-- ... 기존 HTML 생략 -->
     <div class="row">
-        <div class="col-md-4" th:each="analyze : ${analyzes}">
+        <div class="col-md-4" th:each="analyze : ${analyzes}"
+             th:attr="data-graphtype=${analyze.graph.graph_type}">
             <div class="analyze-card">
                 <a th:href="@{analyzes/{image_no}(image_no=${analyze.image.image_no})}">
                     <img th:src="@{/uploads/{filename}(filename=${analyze.image.origin_path})}" alt="분석 이미지" />
@@ -70,7 +96,7 @@
                     </tr>
                     <tr>
                         <th>Graph Type</th>
-                        <td th:text="${analyze.graph.graph_type}"></td>
+                        <td class="graph-type-cell" th:text="${analyze.graph.graph_type}"></td>
                     </tr>
                     <tr>
                         <th>Uploaded By</th>
@@ -82,5 +108,66 @@
         </div>
     </div>
 </div>
+
+<!-- 자바스크립트 영역 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterSelect = document.getElementById('graphFilter');
+        // .col-md-4 요소들을 가져옴
+        const colElements = document.querySelectorAll('.col-md-4');
+
+        filterSelect.addEventListener('change', function() {
+            const selectedValue = this.value; // ex) "Box", "Histogram", ""
+
+            colElements.forEach(function(col) {
+                // .col-md-4에 data-graphtype 속성을 달았다고 가정
+                const cardType = col.getAttribute('data-graphtype');
+
+                // All("")이거나, cardType에 selectedValue가 포함되면 보이기
+                if (selectedValue === "" || cardType.includes(selectedValue)) {
+                    col.style.display = "block";   // 다시 보이도록
+                } else {
+                    col.style.display = "none";    // 숨김
+                }
+            });
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Masonry 초기화
+        var grid = document.querySelector('.row');  // Masonry 레이아웃을 적용할 컨테이너
+        var msnry = new Masonry(grid, {
+            // 옵션
+            itemSelector: '.col-md-4',  // 그리드 아이템 선택자
+            columnWidth: '.col-md-4',  // 열 너비를 어떻게 계산할지
+            percentPosition: true,      // % 단위로 위치를 잡을지 여부
+            transitionDuration: '0.4s'  // 재정렬 시 애니메이션 지속 시간
+        });
+
+        // 필터 셀렉트, 아이템 참조
+        const filterSelect = document.getElementById('graphFilter');
+        const colElements = document.querySelectorAll('.col-md-4');
+
+        filterSelect.addEventListener('change', function() {
+            const selectedValue = this.value;
+
+            colElements.forEach(function(col) {
+                const cardType = col.getAttribute('data-graphtype');
+
+                // 필터 조건에 맞지 않으면 숨김, 맞으면 보임
+                if (selectedValue === '' || cardType.includes(selectedValue)) {
+                    // 보여줄 아이템
+                    col.style.display = 'block';
+                } else {
+                    // 숨길 아이템
+                    col.style.display = 'none';
+                }
+            });
+
+            // 모든 아이템의 display 상태가 변경된 뒤, Masonry에게 레이아웃 재계산 요청
+            msnry.layout();
+        });
+    });
+</script>
+
 </body>
 </html>
