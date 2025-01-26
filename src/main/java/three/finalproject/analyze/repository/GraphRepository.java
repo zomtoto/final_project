@@ -17,6 +17,11 @@ public class GraphRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    public void addGraph(String graph_type) {
+        String sql = "INSERT INTO graph_table (graph_name) VALUES (?)";
+        jdbcTemplate.update(sql, graph_type);
+    }
+
     // RowMapper for GraphDTO
     private static class GraphRowMapper implements RowMapper<GraphDTO> {
         @Override

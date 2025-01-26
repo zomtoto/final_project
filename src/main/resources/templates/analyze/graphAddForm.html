@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="utf-8">
+    <title>그래프 종류 추가</title>
+</head>
+<body>
+<div class="container" style="max-width: 600px; margin-top: 20px;">
+    <h2>그래프 종류 추가</h2>
+    <form th:action="@{/analyze/analyzes/graphs/add}" method="post">
+        <div class="mb-3">
+            <label for="graph_type">그래프 종류</label>
+            <input type="text" id="graph_type" name="graph_type" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-primary">추가</button>
+        <button type="button" class="btn btn-secondary"
+                th:onclick="|location.href='@{/analyze/analyzes/add}'|">
+            취소
+        </button>
+    </form>
+</div>
+</body>
+</html>
