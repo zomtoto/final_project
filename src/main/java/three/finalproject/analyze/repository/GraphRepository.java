@@ -22,15 +22,21 @@ public class GraphRepository {
         @Override
         public GraphDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             GraphDTO graph = new GraphDTO();
+
+            graph.setGraph_no(rs.getLong("graph_no"));
+
             graph.setGraph_type(rs.getString("graph_type"));
             return graph;
         }
     }
 
+
+
+
     //Find all year_no in year_table
     public List<GraphDTO> findAllGraphs() {
         String sql = """
-                SELECT graph_name as graph_type
+                SELECT graph_no, graph_name as graph_type
                 FROM graph_table
                 """;
         return jdbcTemplate.query(sql,new GraphRowMapper());

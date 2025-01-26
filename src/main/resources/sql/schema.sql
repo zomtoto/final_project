@@ -64,11 +64,13 @@ CREATE TABLE analyze_table (
                                analyze_no INTEGER PRIMARY KEY AUTO_INCREMENT,       -- 분석번호
                                image_no INTEGER NOT NULL,                           -- 이미지번호 (FK, image_table)
                                member_no INTEGER NOT NULL,                          -- 회원번호 (FK, member_table)
-                               analyze_year INTEGER NOT NULL,                               -- 연도 // 이미지 관련 연도 기입
-                               graph_type VARCHAR(255) NOT NULL,                        -- 그래프 종류
+                               analyze_year INTEGER NOT NULL,                       -- 연도 // 이미지 관련 연도 기입
+                               graph_no INTEGER NOT NULL,                           -- 그래프 번호 (FK, graph_table)
                                FOREIGN KEY (image_no) REFERENCES image_table(image_no), -- FK to image_table
-                               FOREIGN KEY (member_no) REFERENCES member_table(member_no) -- FK to member_table
+                               FOREIGN KEY (member_no) REFERENCES member_table(member_no), -- FK to member_table
+                               FOREIGN KEY (graph_no) REFERENCES graph_table(graph_no) -- FK to graph_table
 );
+
 
 CREATE TABLE graph_table (
                             graph_no INTEGER PRIMARY KEY AUTO_INCREMENT,
