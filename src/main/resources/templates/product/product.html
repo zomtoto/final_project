@@ -6,65 +6,69 @@
       layout:fragment="Content">
 <head>
   <meta charset="utf-8">
-  <style>
-    .container {
-      max-width: 560px;
-    }
-  </style>
+  <title>상품 상세정보</title>
 </head>
 <body>
-<div class="container">
 
-  <div class="py-5 text-center">
-    <h2>상품 상세</h2>
+<div class="container" style="max-width: 600px; margin-top: 20px;">
+  <div class="py-3 text-center">
+    <h2>상품 상세정보</h2>
   </div>
-<!-- 추가 -->
-  <h2 th:if="${param.status}" th:text="'저장 완료'"></h2>
 
-  <div>
-    <label for="product_no">상품 ID</label>
-    <input type="text" id="product_no" name="product_no" class="form-control"
-           value="1" th:value="${product.product_no}" readonly>
-  </div>
-  <div>
-    <label for="productName">상품명</label>
-    <input type="text" id="productName" name="productName" class="form-control"
-           value="상품A" th:value="${product.name}" readonly>
-  </div>
-  <div>
-    <label for="price">가격</label>
-    <input type="text" id="price" name="price" class="form-control"
-           value="10000" th:value="${product.out_price}" readonly>
-  </div>
-  <div>
-    <label for="quantity">수량</label>
-    <input type="text" id="quantity" name="quantity" class="form-control"
-           value="10" th:value="${product.quantity}" readonly>
-  </div>
-  <hr class="my-4">
-  <!--single checkbox-->
-  <div>판매 여부</div>
-  <div>
-    <div class="form-check">
-      <input type="checkbox" id="open" th:field="${product.seal_service}" class="form-check-input" disabled>
-      <label for="open" class="form-check-label">각인 가능</label>
+  <div class="card shadow-sm p-3">
+    <div class="mb-3">
+      <h5>상품 번호</h5>
+      <p th:text="${product.product_no}"></p>
+    </div>
+    <div class="mb-3">
+      <h5>상품명</h5>
+      <p th:text="${product.name}"></p>
+    </div>
+    <div class="mb-3">
+      <h5>회사명</h5>
+      <p th:text="${product.company}"></p>
+    </div>
+    <div class="mb-3">
+      <h5>입고가</h5>
+      <p th:text="${product.in_price}"></p>
+    </div>
+    <div class="mb-3">
+      <h5>판매가</h5>
+      <p th:text="${product.out_price}"></p>
+    </div>
+    <div class="mb-3">
+      <h5>재고</h5>
+      <p th:text="${product.quantity}"></p>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row mt-3">
     <div class="col">
-      <button class="w-100 btn btn-primary btn-lg"
-              onclick="location.href='editForm.html'"
-              th:onclick="|location.href='@{/product/products/{product_no}/edit(product_no=${product.product_no})}'|"
-              type="button">상품 수정</button>
+      <button class="btn btn-warning w-100"
+              th:onclick="|location.href='@{/product/products/{product_no}/edit(product_no=${product.product_no})}'|">
+        수정
+      </button>
     </div>
     <div class="col">
-      <button class="w-100 btn btn-secondary btn-lg"
-              onclick="location.href='products.html'"
-              th:onclick="|location.href='@{/product/products}'|"
-              type="button">목록으로</button>
+      <button class="btn btn-danger w-100 delete-btn" th:data-id="${product.product_no}">삭제</button>
+    </div>
+    <div class="col">
+      <button class="btn btn-secondary w-100"
+              th:onclick="|location.href='@{/product/products}'|">목록으로
+      </button>
     </div>
   </div>
-</div> <!-- /container -->
+</div>
+
+<script>
+  document.querySelector('.delete-btn').addEventListener('click', function () {
+    const productId = this.getAttribute('data-id');
+    if (confirm("정말 삭제하시겠습니까?")) {
+      fetch(`/product/products/${productId}/delete`, { method: 'POST' })
+              .then(() => location.href = '/product/products');
+    }
+  });
+</script>
+
 </body>
 </html>

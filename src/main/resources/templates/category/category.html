@@ -1,10 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <title>카테고리 상세정보</title>
 </head>
 <body>
+
+<div class="container" style="max-width: 600px; margin-top: 20px;">
+    <div class="py-3 text-center">
+        <h2>카테고리 상세정보</h2>
+    </div>
+
+    <div class="card shadow-sm p-3">
+        <div class="mb-3">
+            <h5>카테고리 번호</h5>
+            <p th:text="${category.category_no}"></p>
+        </div>
+        <div class="mb-3">
+            <h5>카테고리명</h5>
+            <p th:text="${category.name}"></p>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+            <button class="btn btn-warning w-100"
+                    th:onclick="|location.href='@{/category/categories/{category_no}/edit(category_no=${category.category_no})}'|">
+                수정
+            </button>
+        </div>
+        <div class="col">
+            <button class="btn btn-danger w-100" id="deleteBtn">삭제</button>
+        </div>
+        <div class="col">
+            <button class="btn btn-secondary w-100"
+                    th:onclick="|location.href='@{/category/categories}'|">목록으로
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("deleteBtn").addEventListener("click", function () {
+        if (confirm("정말 삭제하시겠습니까?")) {
+            location.href = "/category/categories/" + document.querySelector("[name='category_no']").value + "/delete";
+        }
+    });
+</script>
 
 </body>
 </html>

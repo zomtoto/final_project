@@ -6,53 +6,38 @@
       layout:fragment="Content">
 <head>
   <meta charset="utf-8">
+  <title>상품 목록</title>
 </head>
 <body>
 
 <div class="container d-flex justify-content-center" style="max-width: 800px; margin-top: 20px;">
-
   <div class="card shadow-sm" style="width: 100%; padding: 20px;">
-    <!-- Page Title -->
     <div class="text-center mb-4">
       <h2>상품 목록</h2>
     </div>
 
-    <!-- Add Product Buttons -->
     <div class="row my-3 text-center">
       <div class="col">
-        <button class="btn btn-primary me-2"
-                onclick="location.href='addForm.html'"
-                th:onclick="|location.href='@{/product/products/add}'|"
-                type="button">상품 등록
-        </button>
-        <button class="btn btn-primary me-2"
-                onclick="location.href='addForm.html'"
-                th:onclick="|location.href='@{/category/categories/add}'|"
-                type="button">카테고리 등록
-        </button>
         <button class="btn btn-primary"
-                onclick="location.href='addForm.html'"
-                th:onclick="|location.href='@{/}'|"
-                type="button">메인으로 돌아가기
+                th:onclick="|location.href='@{/product/products/add}'|">
+          상품 등록
         </button>
       </div>
     </div>
 
-    <!-- Table for Product List -->
     <hr>
     <div>
       <table class="table table-striped table-bordered text-center">
         <thead class="thead-dark">
         <tr>
-          <th scope="col">상품번호</th>
-          <th scope="col">상품명</th>
-          <th scope="col">판매가</th>
-          <th scope="col">재고</th>
-          <th scope="col">관리</th>
+          <th>상품번호</th>
+          <th>이름</th>
+          <th>판매가</th>
+          <th>재고</th>
+          <th>관리</th>
         </tr>
         </thead>
         <tbody>
-        <!-- Iterate Over Products -->
         <tr th:each="product : ${products}">
           <td>
             <a th:href="@{/product/products/{product_no}(product_no=${product.product_no})}"
@@ -65,16 +50,33 @@
           <td th:text="${product.out_price}"></td>
           <td th:text="${product.quantity}"></td>
           <td>
-            <button class="btn btn-sm btn-danger"
-                    th:onclick="|location.href='@{/product/products/delete/{product_no}(product_no=${product.product_no})}'|">삭제</button>
+            <button class="btn btn-sm btn-warning"
+                    th:onclick="|location.href='@{/product/products/{product_no}/edit(product_no=${product.product_no})}'|">
+              수정
+            </button>
+            <button class="btn btn-sm btn-danger delete-btn"
+                    th:data-id="${product.product_no}">
+              삭제
+            </button>
           </td>
         </tr>
         </tbody>
       </table>
     </div>
   </div>
-
 </div>
+
+<script>
+  document.querySelectorAll('.delete-btn').forEach(button => {
+    button.addEventListener('click', function () {
+      const productId = this.getAttribute('data-id');
+      if (confirm("정말 삭제하시겠습니까?")) {
+        fetch(`/product/products/${productId}/delete`, { method: 'POST' })
+                .then(() => location.reload());
+      }
+    });
+  });
+</script>
 
 </body>
 </html>

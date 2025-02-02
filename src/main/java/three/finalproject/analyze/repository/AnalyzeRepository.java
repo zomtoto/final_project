@@ -80,8 +80,6 @@ public class AnalyzeRepository {
                 analyzeDTO.getMember().getMember_no(),
                 analyzeDTO.getAnalyze_year(),
                 analyzeDTO.getGraph().getGraph_no());
-
-
     }
 
 
