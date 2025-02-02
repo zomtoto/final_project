@@ -1,0 +1,12 @@
+2025-01-09 16:52:05.618705+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUCT_TABLE" not found (this database is empty); SQL statement:
+SELECT * FROM product_table WHERE delete = 'F' [42104-232]
+2025-01-09 16:52:08.271512+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MEMBER_TABLE" not found (this database is empty); SQL statement:
+SELECT * FROM member_table ORDER BY member_no LIMIT ? OFFSET ? [42104-232]
+2025-01-09 16:52:14.621985+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MEMBER_TABLE" not found (this database is empty); SQL statement:
+SELECT * FROM member_table WHERE id = ? [42104-232]
+2025-01-09 16:52:17.552283+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MEMBER_TABLE" not found (this database is empty); SQL statement:
+SELECT * FROM member_table WHERE id = ? [42104-232]
